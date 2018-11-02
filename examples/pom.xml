@@ -23,7 +23,8 @@
   ~ SOFTWARE.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -36,7 +37,9 @@
     <name>AGQL - Examples</name>
     <description>Contains example codes demonstrating the basic usage of the client interfaces</description>
     <packaging>jar</packaging>
-
+    <properties>
+        <main.basedir>${project.basedir}</main.basedir>
+    </properties>
     <build>
         <plugins>
             <!-- Allow users to execute example applications from command line -->

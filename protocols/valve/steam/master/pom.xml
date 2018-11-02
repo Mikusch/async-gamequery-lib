@@ -38,7 +38,9 @@
     <description>A library containing classes which allow clients to communicate to the Steam Master Server
     </description>
     <packaging>jar</packaging>
-
+    <properties>
+        <main.basedir>${project.basedir}</main.basedir>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

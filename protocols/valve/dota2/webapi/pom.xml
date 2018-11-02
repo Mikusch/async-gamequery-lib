@@ -37,7 +37,9 @@
     <name>AGQL - Valve - Dota 2 WebAPI</name>
     <description>Implementation for the Dota 2 Web API Interfaces</description>
     <packaging>jar</packaging>
-
+    <properties>
+        <main.basedir>${project.basedir}</main.basedir>
+    </properties>
     <build>
         <plugins>
             <!-- JaCoCo Code Coverage -->

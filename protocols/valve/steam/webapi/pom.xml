@@ -37,7 +37,9 @@
     <name>AGQL - Valve - Steam Web API</name>
     <description>An implementation for the Steam Web API Interfaces</description>
     <packaging>jar</packaging>
-
+    <properties>
+        <main.basedir>${project.basedir}</main.basedir>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>com.google.code.gson</groupId>

@@ -37,7 +37,9 @@
     <name>AGQL - Valve - Source Query/Rcon</name>
     <description>An implementation of the Valve Source Query/Rcon Protocol</description>
     <packaging>jar</packaging>
-
+    <properties>
+        <main.basedir>${project.basedir}</main.basedir>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>com.google.guava</groupId>
