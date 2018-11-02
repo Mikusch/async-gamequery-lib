@@ -43,6 +43,10 @@
     <artifactId>async-gamequery-lib</artifactId>
     <name>Asynchronous Game Query Library</name>
     <version>0.1.7-SNAPSHOT</version>
+    <organization>
+        <name>Asynchronous Game Query Library</name>
+        <url>https://ribasco.github.io/async-gamequery-lib</url>
+    </organization>
     <inceptionYear>2016</inceptionYear>
     <url>https://ribasco.github.io/async-gamequery-lib</url>
     <packaging>pom</packaging>
@@ -622,7 +626,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>
-                <executions>
+                <!--<executions>
                     <execution>
                         <id>update-project-license</id>
                         <goals>
@@ -643,7 +647,7 @@
                             <descriptionTemplate>${project.basedir}/scripts/license/template.ftl</descriptionTemplate>
                         </configuration>
                     </execution>
-                </executions>
+                </executions>-->
                 <inherited>false</inherited>
             </plugin>
             <plugin>
