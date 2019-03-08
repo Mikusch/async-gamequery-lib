@@ -85,7 +85,7 @@ public final class MasterServerFilter {
     /**
      * <p>Servers that are not empty</p>
      *
-     * @param value
+     * @param value Set to true to only filter servers that are empty
      *
      * @return Instance of {@link MasterServerFilter}
      */
@@ -96,7 +96,7 @@ public final class MasterServerFilter {
     /**
      * <p>Filter for password protected servers</p>
      *
-     * @param value
+     * @param value Set to true to only filter servers that are password protected
      *
      * @return Instance of {@link MasterServerFilter}
      */
@@ -107,7 +107,7 @@ public final class MasterServerFilter {
     /**
      * <p>Servers running on a Linux platform</p>
      *
-     * @param value
+     * @param value Set to true to filter servers only running under linux
      *
      * @return Instance of {@link MasterServerFilter}
      */
@@ -118,7 +118,7 @@ public final class MasterServerFilter {
     /**
      * <p>Servers running the specified map (ex. cs_italy)</p>
      *
-     * @param value
+     * @param value Map name
      *
      * @return Instance of {@link MasterServerFilter}
      */
@@ -129,7 +129,7 @@ public final class MasterServerFilter {
     /**
      * <p>Servers running the specified modification (ex. cstrike)</p>
      *
-     * @param value
+     * @param value The mode/game directory name (e.g. cstrike)
      *
      * @return Instance of {@link MasterServerFilter}
      */
@@ -140,7 +140,7 @@ public final class MasterServerFilter {
     /**
      * <p>Servers using anti-cheat technology (VAC, but potentially others as well)</p>
      *
-     * @param value
+     * @param value Set to true to filter only secure servers (VAC protected)
      *
      * @return Instance of {@link MasterServerFilter}
      */
@@ -151,7 +151,7 @@ public final class MasterServerFilter {
     /**
      * <p>Servers running dedicated</p>
      *
-     * @param value
+     * @param value Set to true to filter only dedicated servers
      *
      * @return Instance of {@link MasterServerFilter}
      */
@@ -197,7 +197,7 @@ public final class MasterServerFilter {
     /**
      * <p>Servers that are empty</p>
      *
-     * @param value
+     * @param value Set to true to filter only empty servers
      *
      * @return Instance of {@link MasterServerFilter}
      */
@@ -221,7 +221,7 @@ public final class MasterServerFilter {
      * Servers with ALL of the given tag(s) in their 'hidden' tags (e.g. L4D2)
      *
      * @param tags
-     *         Array of String game logger tags
+     *         Array of String game server tags
      *
      * @return Instance of {@link MasterServerFilter}
      */
@@ -233,7 +233,7 @@ public final class MasterServerFilter {
      * Servers with ANY of the given tag(s) in their 'hidden' tags (e.g. L4D2)
      *
      * @param tags
-     *         Array of String game logger tags
+     *         Array of String game server tags
      *
      * @return Instance of {@link MasterServerFilter}
      */
@@ -266,10 +266,10 @@ public final class MasterServerFilter {
     }
 
     /**
-     * Return only one logger for each unique IP address matched
+     * Return only one server for each unique IP address matched
      *
      * @param value
-     *         Set to True to return only one logger for each unique IP
+     *         Set to True to return only one server for each unique IP
      *
      * @return Instance of {@link MasterServerFilter}
      */
@@ -292,7 +292,7 @@ public final class MasterServerFilter {
     /**
      * <p>Servers that are whitelisted</p>
      *
-     * @param value
+     * @param value Set to true to filter only whitelisted servers
      *
      * @return Instance of {@link MasterServerFilter}
      */

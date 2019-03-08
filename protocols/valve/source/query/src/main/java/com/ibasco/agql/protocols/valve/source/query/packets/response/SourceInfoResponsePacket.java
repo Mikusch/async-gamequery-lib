@@ -24,11 +24,10 @@
 
 package com.ibasco.agql.protocols.valve.source.query.packets.response;
 
+import static com.ibasco.agql.core.utils.ByteBufUtils.readString;
 import com.ibasco.agql.protocols.valve.source.query.SourceResponsePacket;
 import com.ibasco.agql.protocols.valve.source.query.pojos.SourceServer;
 import io.netty.buffer.ByteBuf;
-
-import static com.ibasco.agql.core.utils.ByteBufUtils.readString;
 
 /**
  * Created by raffy on 9/5/2016.

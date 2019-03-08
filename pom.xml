@@ -66,7 +66,7 @@
         <developer>
             <id>ribasco</id>
             <name>Rafael Luis Ibasco</name>
-            <email>raffy@ibasco.com</email>
+            <email>ribasco@gmail.com</email>
             <url>https://github.com/ribasco</url>
             <roles>
                 <role>developer</role>
@@ -181,17 +181,17 @@
     <reporting>
         <plugins>
             <!-- Changes -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-changes-plugin</artifactId>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>github-report</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
+            <!--            <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-changes-plugin</artifactId>
+                            <reportSets>
+                                <reportSet>
+                                    <reports>
+                                        <report>github-report</report>
+                                    </reports>
+                                </reportSet>
+                            </reportSets>
+                        </plugin>-->
             <!-- ChangeLog -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -320,42 +320,6 @@
         <!-- Plugin configuration shared across all child-modules -->
         <pluginManagement>
             <plugins>
-                <!-- License Plugin -->
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>license-maven-plugin</artifactId>
-                    <version>1.16</version>
-                    <executions>
-                        <execution>
-                            <id>append-license-file-headers</id>
-                            <goals>
-                                <goal>update-file-header</goal>
-                            </goals>
-                            <phase>process-sources</phase>
-                            <configuration>
-                                <licenseName>mit</licenseName>
-                                <descriptionTemplate>${main.basedir}/scripts/license/template.ftl</descriptionTemplate>
-                                <canUpdateCopyright>true</canUpdateCopyright>
-                                <canUpdateDescription>true</canUpdateDescription>
-                                <canUpdateLicense>true</canUpdateLicense>
-                                <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
-                                <processStartTag>========================START=================================
-                                </processStartTag>
-                                <processEndTag>=========================END==================================
-                                </processEndTag>
-                                <includes>
-                                    <include>**/*.java</include>
-                                    <include>**/*.xml</include>
-                                </includes>
-                                <roots>
-                                    <root>src/main/java</root>
-                                    <root>src/test</root>
-                                    <root>src/main/cpp</root>
-                                </roots>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
@@ -595,60 +559,11 @@
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>2.20</version>
                 </plugin>
-                <!-- JaCoCo Test Code Coverage -->
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.7.9</version>
-                    <executions>
-                        <execution>
-                            <id>jacoco-initialize</id>
-                            <goals>
-                                <goal>prepare-agent</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>jacoco-site</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>report</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
             </plugins>
         </pluginManagement>
 
         <!-- Parent plugin declaration -->
         <plugins>
-            <!-- Generate license file -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <!--<executions>
-                    <execution>
-                        <id>update-project-license</id>
-                        <goals>
-                            <goal>update-project-license</goal>
-                        </goals>
-                        <phase>process-sources</phase>
-                        <configuration>
-                            <licenseName>mit</licenseName>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>append-license-file-headers</id>
-                        <goals>
-                            <goal>update-file-header</goal>
-                        </goals>
-                        <phase>process-sources</phase>
-                        <configuration>
-                            <descriptionTemplate>${project.basedir}/scripts/license/template.ftl</descriptionTemplate>
-                        </configuration>
-                    </execution>
-                </executions>-->
-                <inherited>false</inherited>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
@@ -668,11 +583,6 @@
             <plugin>
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
-            </plugin>
-            <!-- JaCoCo Code Coverage -->
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

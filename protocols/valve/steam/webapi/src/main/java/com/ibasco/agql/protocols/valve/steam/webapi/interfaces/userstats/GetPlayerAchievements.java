@@ -26,7 +26,6 @@ package com.ibasco.agql.protocols.valve.steam.webapi.interfaces.userstats;
 
 import com.ibasco.agql.protocols.valve.steam.webapi.SteamApiConstants;
 import com.ibasco.agql.protocols.valve.steam.webapi.requests.SteamUserStatsRequest;
-
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
 /**

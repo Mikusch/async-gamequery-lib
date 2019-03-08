@@ -36,7 +36,7 @@ public class ByteBufUtils {
     private static final Logger log = LoggerFactory.getLogger(ByteBufUtils.class);
 
     public static String readString(ByteBuf buffer) {
-        return readString(buffer, CharsetUtil.ISO_8859_1, false, null);
+        return readString(buffer, CharsetUtil.UTF_8, false, null);
     }
 
     public static String readString(ByteBuf buffer, Charset encoding) {

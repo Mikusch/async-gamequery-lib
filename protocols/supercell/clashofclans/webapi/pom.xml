@@ -38,18 +38,6 @@
     <name>AGQL - Supercell - COC WebAPI</name>
     <description>Implementation for the Clash of Clans Web API Interfaces</description>
     <packaging>jar</packaging>
-    <properties>
-        <main.basedir>${project.basedir}</main.basedir>
-    </properties>
-    <build>
-        <plugins>
-            <!-- JaCoCo Code Coverage -->
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
     <dependencies>
         <dependency>

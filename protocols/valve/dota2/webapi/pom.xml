@@ -40,15 +40,6 @@
     <properties>
         <main.basedir>${project.basedir}</main.basedir>
     </properties>
-    <build>
-        <plugins>
-            <!-- JaCoCo Code Coverage -->
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
     <dependencies>
         <dependency>

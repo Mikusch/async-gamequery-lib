@@ -54,7 +54,7 @@ public enum RequestStatus {
      */
     SENT,
     /**
-     * Response from the logger has been received
+     * Response from the server has been received
      */
     DONE
 }

@@ -72,7 +72,7 @@ public class MasterServerQueryClient extends AbstractGameServerClient<MasterServ
      * <p>Retrieves a list of servers from the Steam Master Server.</p>
      *
      * @param region
-     *         A {@link MasterServerRegion} value that specifies which server region the master logger should return
+     *         A {@link MasterServerRegion} value that specifies which server region the master server should return
      * @param filter
      *         A {@link MasterServerFilter} representing a set of filters to be used by the query
      *

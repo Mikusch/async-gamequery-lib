@@ -24,13 +24,12 @@
 
 package com.ibasco.agql.protocols.valve.source.query.packets.response;
 
+import static com.ibasco.agql.core.utils.ByteBufUtils.readString;
 import com.ibasco.agql.protocols.valve.source.query.SourceResponsePacket;
 import io.netty.buffer.ByteBuf;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.ibasco.agql.core.utils.ByteBufUtils.readString;
 
 /**
  * Created by raffy on 9/6/2016.

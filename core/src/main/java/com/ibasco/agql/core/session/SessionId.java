@@ -24,12 +24,11 @@
 
 package com.ibasco.agql.core.session;
 
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
-
-import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
 public final class SessionId implements Serializable, Comparable<SessionId> {
     private String id;

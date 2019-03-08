@@ -24,13 +24,12 @@
 
 package com.ibasco.agql.core;
 
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 import org.apache.commons.lang3.builder.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
-
-import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
 abstract public class AbstractMessage<T> implements Message<T>, Comparable<AbstractMessage<T>> {
     private InetSocketAddress sender;

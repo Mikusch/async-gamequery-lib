@@ -27,6 +27,7 @@ package com.ibasco.agql.protocols.valve.source.query.handlers;
 import com.ibasco.agql.protocols.valve.source.query.SourceRconPacketBuilder;
 import com.ibasco.agql.protocols.valve.source.query.SourceRconResponsePacket;
 import com.ibasco.agql.protocols.valve.source.query.enums.SourceRconResponseType;
+import static com.ibasco.agql.protocols.valve.source.query.enums.SourceRconResponseType.get;
 import com.ibasco.agql.protocols.valve.source.query.packets.response.SourceRconTermResponsePacket;
 import com.ibasco.agql.protocols.valve.source.query.utils.SourceRconUtil;
 import io.netty.buffer.ByteBuf;
@@ -39,8 +40,6 @@ import org.slf4j.LoggerFactory;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static com.ibasco.agql.protocols.valve.source.query.enums.SourceRconResponseType.get;
 
 /**
  * <p>A Class that process incoming UDP datagrams and decodes each frame into {@link SourceRconResponsePacket}

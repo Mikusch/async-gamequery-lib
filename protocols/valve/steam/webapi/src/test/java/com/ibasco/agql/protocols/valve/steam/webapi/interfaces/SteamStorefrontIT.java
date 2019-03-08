@@ -26,13 +26,12 @@ package com.ibasco.agql.protocols.valve.steam.webapi.interfaces;
 
 import com.ibasco.agql.protocols.valve.steam.webapi.SteamWebApiClient;
 import com.ibasco.agql.protocols.valve.steam.webapi.pojos.StoreAppDetails;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Properties;
-
-import static org.junit.Assert.*;
 
 public class SteamStorefrontIT {
 
