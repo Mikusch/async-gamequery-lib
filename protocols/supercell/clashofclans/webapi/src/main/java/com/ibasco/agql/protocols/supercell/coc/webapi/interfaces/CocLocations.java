@@ -225,6 +225,32 @@ public class CocLocations extends CocWebApiInterface {
      *
      * @param locationId
      *         An {@link Integer} representing the identifier of the location to retrieve.
+     *
+     * @return A {@link CompletableFuture} containing a future result of a {@link List} of {@link CocLocationPlayerVsRanks}
+     */
+    public CompletableFuture<List<CocLocationPlayerVsRanks>> getPlayerVsRankingsForLoc(int locationId) {
+        return getPlayerVsRankingsForLoc(locationId, -1, -1, -1);
+    }
+
+    /**
+     * <p>Get player versus rankings for a specific location</p>
+     *
+     * @param locationId
+     *         An {@link Integer} representing the identifier of the location to retrieve.
+     * @param limit
+     *         An {@link Integer} limiting the number of records returned
+     *
+     * @return A {@link CompletableFuture} containing a future result of a {@link List} of {@link CocLocationPlayerVsRanks}
+     */
+    public CompletableFuture<List<CocLocationPlayerVsRanks>> getPlayerVsRankingsForLoc(int locationId, int limit) {
+        return getPlayerVsRankingsForLoc(locationId, limit, -1, -1);
+    }
+
+    /**
+     * <p>Get player versus rankings for a specific location</p>
+     *
+     * @param locationId
+     *         An {@link Integer} representing the identifier of the location to retrieve.
      * @param limit
      *         An {@link Integer} limiting the number of records returned
      * @param before
@@ -245,6 +271,32 @@ public class CocLocations extends CocWebApiInterface {
             return builder().fromJson(items, new TypeToken<List<CocLocationPlayerVsRanks>>() {
             }.getType());
         });
+    }
+
+    /**
+     * <p>Get clan versus rankings for a specific location</p>
+     *
+     * @param locationId
+     *         An {@link Integer} representing the identifier of the location to retrieve.
+     *
+     * @return A {@link CompletableFuture} containing a future result of a {@link List} of {@link CocLocationClanVsRanks}
+     */
+    public CompletableFuture<List<CocLocationClanVsRanks>> getClanVsRankingsForLoc(int locationId) {
+        return getClanVsRankingsForLoc(locationId, -1);
+    }
+
+    /**
+     * <p>Get clan versus rankings for a specific location</p>
+     *
+     * @param locationId
+     *         An {@link Integer} representing the identifier of the location to retrieve.
+     * @param limit
+     *         An {@link Integer} limiting the number of records returned
+     *
+     * @return A {@link CompletableFuture} containing a future result of a {@link List} of {@link CocLocationClanVsRanks}
+     */
+    public CompletableFuture<List<CocLocationClanVsRanks>> getClanVsRankingsForLoc(int locationId, int limit) {
+        return getClanVsRankingsForLoc(locationId, -1, -1, -1);
     }
 
     /**
