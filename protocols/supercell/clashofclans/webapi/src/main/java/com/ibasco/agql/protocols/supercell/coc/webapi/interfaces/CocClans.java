@@ -41,7 +41,6 @@ import com.ibasco.agql.protocols.supercell.coc.webapi.pojos.CocWarLogEntry;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 /**
  * <p>A Web API Implementation of the Clan interface. Contains methods for clan-related inquiries.</p>
@@ -76,14 +75,11 @@ public class CocClans extends CocWebApiInterface {
      */
     public CompletableFuture<List<CocClanDetailedInfo>> searchClans(CocSearchCriteria criteria) {
         CompletableFuture<JsonObject> json = sendRequest(new SearchClan(VERSION_1, criteria));
-        return json.thenApply(new Function<JsonObject, List<CocClanDetailedInfo>>() {
-            @Override
-            public List<CocClanDetailedInfo> apply(JsonObject root) {
-                JsonArray items = root.getAsJsonArray("items");
-                Type type = new TypeToken<List<CocClanDetailedInfo>>() {
-                }.getType();
-                return builder().fromJson(items, type);
-            }
+        return json.thenApply(root -> {
+            JsonArray items = root.getAsJsonArray("items");
+            Type type = new TypeToken<List<CocClanDetailedInfo>>() {
+            }.getType();
+            return builder().fromJson(items, type);
         });
     }
 
@@ -152,14 +148,11 @@ public class CocClans extends CocWebApiInterface {
      */
     public CompletableFuture<List<CocPlayerBasicInfo>> getClanMembers(String clanTag, int limit, int after, int before) {
         CompletableFuture<JsonObject> json = sendRequest(new GetClanMembers(VERSION_1, clanTag, limit, after, before));
-        return json.thenApply(new Function<JsonObject, List<CocPlayerBasicInfo>>() {
-            @Override
-            public List<CocPlayerBasicInfo> apply(JsonObject root) {
-                JsonArray items = root.getAsJsonArray("items");
-                Type type = new TypeToken<List<CocPlayerBasicInfo>>() {
-                }.getType();
-                return builder().fromJson(items, type);
-            }
+        return json.thenApply(root -> {
+            JsonArray items = root.getAsJsonArray("items");
+            Type type = new TypeToken<List<CocPlayerBasicInfo>>() {
+            }.getType();
+            return builder().fromJson(items, type);
         });
     }
 
@@ -197,14 +190,11 @@ public class CocClans extends CocWebApiInterface {
      */
     public CompletableFuture<List<CocWarLogEntry>> getClanWarLog(String clanTag, int limit, int after, int before) {
         CompletableFuture<JsonObject> json = sendRequest(new GetClanWarLog(VERSION_1, clanTag, limit, after, before));
-        return json.thenApply(new Function<JsonObject, List<CocWarLogEntry>>() {
-            @Override
-            public List<CocWarLogEntry> apply(JsonObject root) {
-                JsonArray items = root.getAsJsonArray("items");
-                Type type = new TypeToken<List<CocWarLogEntry>>() {
-                }.getType();
-                return builder().fromJson(items, type);
-            }
+        return json.thenApply(root -> {
+            JsonArray items = root.getAsJsonArray("items");
+            Type type = new TypeToken<List<CocWarLogEntry>>() {
+            }.getType();
+            return builder().fromJson(items, type);
         });
     }
 }
