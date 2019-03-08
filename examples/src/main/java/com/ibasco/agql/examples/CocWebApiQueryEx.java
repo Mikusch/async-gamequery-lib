@@ -32,11 +32,14 @@ import com.ibasco.agql.protocols.supercell.coc.webapi.interfaces.CocClans;
 import com.ibasco.agql.protocols.supercell.coc.webapi.interfaces.CocLeagues;
 import com.ibasco.agql.protocols.supercell.coc.webapi.interfaces.CocLocations;
 import com.ibasco.agql.protocols.supercell.coc.webapi.interfaces.CocPlayers;
+import com.ibasco.agql.protocols.supercell.coc.webapi.pojos.CocLocationClanVsRanks;
+import com.ibasco.agql.protocols.supercell.coc.webapi.pojos.CocLocationPlayerVsRanks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class CocWebApiQueryEx extends BaseWebApiAuthExample {
     private static final Logger log = LoggerFactory.getLogger(CocWebApiQueryEx.class);
@@ -64,11 +67,17 @@ public class CocWebApiQueryEx extends BaseWebApiAuthExample {
         CocPlayers players = new CocPlayers(client);
 
         log.info("Search Clans");
-        clans.searchClans(CocSearchCriteria.create().warFrequency(CocWarFrequency.ALWAYS).limit(10)).thenAccept(clanInfos -> log.info("Size: {}, Data: {}", clanInfos.size(), clanInfos)).join();
+        clans.searchClans(
+                CocSearchCriteria.create()
+                        .warFrequency(CocWarFrequency.ALWAYS)
+                        .limit(10)
+        ).thenAccept(clanInfos -> log.info("Size: {}, Data: {}", clanInfos.size(), clanInfos)).join();
         log.info("Get Clan Info");
         clans.getClanInfo("#PUYJGC2U").thenAccept(clanInfo -> log.info("Clan Info: {}", clanInfo)).join();
         log.info("Get Clan Members");
-        clans.getClanMembers("#PUYJGC2U").thenAccept(cocPlayers -> cocPlayers.forEach(cocPlayer -> log.info("{}", cocPlayer))).join();
+        clans.getClanMembers("#PUYJGC2U").thenAccept(cocPlayers -> {
+            cocPlayers.forEach(cocPlayer -> log.info("{}", cocPlayer));
+        }).join();
         log.info("Get Clan Warlog");
         clans.getClanWarLog("#PUYJGC2U").thenAccept(cocWarLogEntries -> cocWarLogEntries.forEach(cocWarLogEntry -> log.info("War Log Entry: {}", cocWarLogEntry))).join();
 
@@ -76,6 +85,21 @@ public class CocWebApiQueryEx extends BaseWebApiAuthExample {
         locations.getLocations().thenAccept(cocClanLocations -> cocClanLocations.forEach(cocClanLocation -> log.info("Location: {}", cocClanLocation))).join();
         locations.getLocationInfo(32000000).thenAccept(cocLocation -> log.info("Single Location: {}", cocLocation)).join();
         locations.getClanRankingsFromLocation(32000185).thenAccept(cocClanRankInfos -> cocClanRankInfos.forEach(cocClanRankInfo -> log.info("Ranking: {}", cocClanRankInfo))).join();
+
+        locations.getPlayerVsRankingsForLoc(32000114, 10, -1, -1).thenAccept(new Consumer<List<CocLocationPlayerVsRanks>>() {
+            @Override
+            public void accept(List<CocLocationPlayerVsRanks> cocLocationPlayerVsRanks) {
+                cocLocationPlayerVsRanks.forEach(rankInfo -> log.info("Player vs rank: {}", rankInfo));
+            }
+        });
+
+        locations.getClanVsRankingsForLoc(32000114, 10, -1, -1).thenAccept(new Consumer<List<CocLocationClanVsRanks>>() {
+            @Override
+            public void accept(List<CocLocationClanVsRanks> cocLocationPlayerVsRanks) {
+                cocLocationPlayerVsRanks.forEach(rankInfo -> log.info("Clan vs rank: {}", rankInfo));
+            }
+        });
+
         log.info("Displaying Player Rankings by Location");
         locations.getPlayerRankingsFromLocation(32000185).thenAccept(CocWebApiQueryEx::displayListResults).join();
 
@@ -88,6 +112,8 @@ public class CocWebApiQueryEx extends BaseWebApiAuthExample {
 
         log.info("Retrieving Detailed Player Information");
         players.getPlayerInfo("#J0PYGCG").thenAccept(p -> log.info("Player Info: {}", p)).join();
+
+
     }
 
     @Override
