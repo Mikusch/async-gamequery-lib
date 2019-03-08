@@ -1,0 +1,1 @@
+package com.ibasco.agql.protocols.supercell.coc.webapi;

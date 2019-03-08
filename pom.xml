@@ -31,8 +31,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <mvn.compiler.version>3.6.2</mvn.compiler.version>
-        <source.version>1.8</source.version>
-        <target.version>1.8</target.version>
+        <source.version>11</source.version>
+        <target.version>11</target.version>
         <github.global.server>github</github.global.server>
         <site.dir>${project.basedir}/site</site.dir>
         <github.site.path>${project.version}</github.site.path>
@@ -42,7 +42,7 @@
     <groupId>com.ibasco.agql</groupId>
     <artifactId>async-gamequery-lib</artifactId>
     <name>Asynchronous Game Query Library</name>
-    <version>0.1.7-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <organization>
         <name>Asynchronous Game Query Library</name>
         <url>https://ribasco.github.io/async-gamequery-lib</url>
@@ -60,7 +60,6 @@
         <url>https://github.com/ribasco/async-gamequery-lib</url>
         <connection>scm:git:git://github.com/ribasco/async-gamequery-lib.git</connection>
         <developerConnection>scm:git:git@github.com:ribasco/async-gamequery-lib.git</developerConnection>
-        <tag>agql-project-0.1.5</tag>
     </scm>
 
     <developers>
@@ -717,6 +716,12 @@
                 <version>${project.version}</version>
             </dependency>
             <!-- Third Party Dependencies -->
+            <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
+            <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>2.4.0-b180830.0359</version>
+            </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
@@ -743,6 +748,11 @@
                 <artifactId>junit</artifactId>
                 <version>4.12</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>5.4.0</version>
             </dependency>
             <dependency>
                 <groupId>org.powermock</groupId>
