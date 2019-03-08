@@ -37,6 +37,9 @@ public class CocApiConstants {
     public static final String UF_COC_LOCATION_INFO = "${baseUrl}/locations/${locationId}";
     public static final String UF_COC_LOCATION_CLAN_RANK = "${baseUrl}/locations/${locationId}/rankings/clans";
     public static final String UF_COC_LOCATION_PLAYER_RANK = "${baseUrl}/locations/${locationId}/rankings/players";
+    public static final String UF_COC_LOCATION_PLAYER_VS_RANK = "${baseUrl}/locations/${locationId}/rankings/players-versus";
+    public static final String UF_COC_LOCATION_CLAN_VS_RANK = "${baseUrl}/locations/${locationId}/rankings/clans-versus";
+
     //uf league interface
     public static final String UF_COC_LEAGUES = "${baseUrl}/leagues";
     public static final String UF_COC_LEAGUE_INFO = "${baseUrl}/leagues/${leagueId}";

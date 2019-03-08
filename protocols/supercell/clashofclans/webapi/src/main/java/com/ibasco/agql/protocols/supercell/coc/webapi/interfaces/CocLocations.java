@@ -29,17 +29,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.ibasco.agql.protocols.supercell.coc.webapi.CocWebApiClient;
 import com.ibasco.agql.protocols.supercell.coc.webapi.CocWebApiInterface;
-import com.ibasco.agql.protocols.supercell.coc.webapi.interfaces.locations.GetClanRankingsForLoc;
-import com.ibasco.agql.protocols.supercell.coc.webapi.interfaces.locations.GetLocationInfo;
-import com.ibasco.agql.protocols.supercell.coc.webapi.interfaces.locations.GetLocations;
-import com.ibasco.agql.protocols.supercell.coc.webapi.interfaces.locations.GetPlayerRankingsForLoc;
-import com.ibasco.agql.protocols.supercell.coc.webapi.pojos.CocClanRankInfo;
-import com.ibasco.agql.protocols.supercell.coc.webapi.pojos.CocLocation;
-import com.ibasco.agql.protocols.supercell.coc.webapi.pojos.CocPlayerRankInfo;
+import com.ibasco.agql.protocols.supercell.coc.webapi.interfaces.locations.*;
+import com.ibasco.agql.protocols.supercell.coc.webapi.pojos.*;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 /**
  * <p>A Web API Implementation of the Location interface. Contains methods for clan/player inquiries based on
@@ -98,13 +92,10 @@ public class CocLocations extends CocWebApiInterface {
      */
     public CompletableFuture<List<CocLocation>> getLocations(int limit, int before, int after) {
         CompletableFuture<JsonObject> json = sendRequest(new GetLocations(VERSION_1, limit, before, after));
-        return json.thenApply(new Function<JsonObject, List<CocLocation>>() {
-            @Override
-            public List<CocLocation> apply(JsonObject root) {
-                JsonArray items = root.getAsJsonArray("items");
-                return builder().fromJson(items, new TypeToken<List<CocLocation>>() {
-                }.getType());
-            }
+        return json.thenApply(root -> {
+            JsonArray items = root.getAsJsonArray("items");
+            return builder().fromJson(items, new TypeToken<List<CocLocation>>() {
+            }.getType());
         });
     }
 
@@ -169,13 +160,10 @@ public class CocLocations extends CocWebApiInterface {
      */
     public CompletableFuture<List<CocClanRankInfo>> getClanRankingsFromLocation(int locationId, int limit, int before, int after) {
         CompletableFuture<JsonObject> json = sendRequest(new GetClanRankingsForLoc(VERSION_1, locationId, limit, before, after));
-        return json.thenApply(new Function<JsonObject, List<CocClanRankInfo>>() {
-            @Override
-            public List<CocClanRankInfo> apply(JsonObject root) {
-                JsonArray items = root.getAsJsonArray("items");
-                return builder().fromJson(items, new TypeToken<List<CocClanRankInfo>>() {
-                }.getType());
-            }
+        return json.thenApply(root -> {
+            JsonArray items = root.getAsJsonArray("items");
+            return builder().fromJson(items, new TypeToken<List<CocClanRankInfo>>() {
+            }.getType());
         });
     }
 
@@ -225,14 +213,36 @@ public class CocLocations extends CocWebApiInterface {
      */
     public CompletableFuture<List<CocPlayerRankInfo>> getPlayerRankingsFromLocation(int locationId, int limit, int before, int after) {
         CompletableFuture<JsonObject> json = sendRequest(new GetPlayerRankingsForLoc(VERSION_1, locationId, limit, before, after));
-        return json.thenApply(new Function<JsonObject, List<CocPlayerRankInfo>>() {
-            @Override
-            public List<CocPlayerRankInfo> apply(JsonObject root) {
-                JsonArray items = root.getAsJsonArray("items");
-                return builder().fromJson(items, new TypeToken<List<CocPlayerRankInfo>>() {
-                }.getType());
-            }
+        return json.thenApply(root -> {
+            JsonArray items = root.getAsJsonArray("items");
+            return builder().fromJson(items, new TypeToken<List<CocPlayerRankInfo>>() {
+            }.getType());
         });
     }
 
+    /**
+     * @param locationId
+     * @param limit
+     * @param before
+     * @param after
+     *
+     * @return
+     */
+    public CompletableFuture<List<CocLocationPlayerVsRanks>> getPlayerVsRankingsForLoc(int locationId, int limit, int before, int after) {
+        CompletableFuture<JsonObject> json = sendRequest(new GetPlayerVsRankingsForLoc(VERSION_1, locationId, limit, before, after));
+        return json.thenApply(root -> {
+            JsonArray items = root.getAsJsonArray("items");
+            return builder().fromJson(items, new TypeToken<List<CocLocationPlayerVsRanks>>() {
+            }.getType());
+        });
+    }
+
+    public CompletableFuture<List<CocLocationClanVsRanks>> getClanVsRankingsForLoc(int locationId, int limit, int before, int after) {
+        CompletableFuture<JsonObject> json = sendRequest(new GetClanVsRankingsForLoc(VERSION_1, locationId, limit, before, after));
+        return json.thenApply(root -> {
+            JsonArray items = root.getAsJsonArray("items");
+            return builder().fromJson(items, new TypeToken<List<CocLocationClanVsRanks>>() {
+            }.getType());
+        });
+    }
 }
