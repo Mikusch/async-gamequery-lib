@@ -221,12 +221,22 @@ public class CocLocations extends CocWebApiInterface {
     }
 
     /**
-     * @param locationId
-     * @param limit
-     * @param before
-     * @param after
+     * <p>Get player versus rankings for a specific location</p>
      *
-     * @return
+     * @param locationId
+     *         An {@link Integer} representing the identifier of the location to retrieve.
+     * @param limit
+     *         An {@link Integer} limiting the number of records returned
+     * @param before
+     *         (optional) An {@link Integer} that indicates to return only items that occur before this marker.
+     *         Before marker can be found from the response, inside the 'paging' property. Note         that only after
+     *         or before can be specified for a request, not both. Otherwise use -1 to disregard.
+     * @param after
+     *         (optional) An {@link Integer} that indicates to return only items that occur after this marker.
+     *         After marker can be found from the response, inside the 'paging' property. Note that only after
+     *         or before can be specified for a request, not both. Otherwise use -1 to disregard.
+     *
+     * @return A {@link CompletableFuture} containing a future result of a {@link List} of {@link CocLocationPlayerVsRanks}
      */
     public CompletableFuture<List<CocLocationPlayerVsRanks>> getPlayerVsRankingsForLoc(int locationId, int limit, int before, int after) {
         CompletableFuture<JsonObject> json = sendRequest(new GetPlayerVsRankingsForLoc(VERSION_1, locationId, limit, before, after));
@@ -237,6 +247,24 @@ public class CocLocations extends CocWebApiInterface {
         });
     }
 
+    /**
+     * <p>Get clan versus rankings for a specific location</p>
+     *
+     * @param locationId
+     *         An {@link Integer} representing the identifier of the location to retrieve.
+     * @param limit
+     *         An {@link Integer} limiting the number of records returned
+     * @param before
+     *         (optional) An {@link Integer} that indicates to return only items that occur before this marker.
+     *         Before marker can be found from the response, inside the 'paging' property. Note         that only after
+     *         or before can be specified for a request, not both. Otherwise use -1 to disregard.
+     * @param after
+     *         (optional) An {@link Integer} that indicates to return only items that occur after this marker.
+     *         After marker can be found from the response, inside the 'paging' property. Note that only after
+     *         or before can be specified for a request, not both. Otherwise use -1 to disregard.
+     *
+     * @return A {@link CompletableFuture} containing a future result of a {@link List} of {@link CocLocationClanVsRanks}
+     */
     public CompletableFuture<List<CocLocationClanVsRanks>> getClanVsRankingsForLoc(int locationId, int limit, int before, int after) {
         CompletableFuture<JsonObject> json = sendRequest(new GetClanVsRankingsForLoc(VERSION_1, locationId, limit, before, after));
         return json.thenApply(root -> {
