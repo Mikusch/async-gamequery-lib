@@ -47,14 +47,17 @@ abstract public class CocWebApiRequest extends AbstractWebApiRequest {
     }
 
     public void limit(int limit) {
-        urlParam("limit", limit);
+        if (limit > 0)
+            urlParam("limit", limit);
     }
 
     public void before(int before) {
-        urlParam("before", before);
+        if (before > 0)
+            urlParam("before", before);
     }
 
     public void after(int after) {
-        urlParam("after", after);
+        if (after > 0)
+            urlParam("after", after);
     }
 }
