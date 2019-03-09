@@ -8,4 +8,5 @@ module agql.lib.examples {
     requires agql.steam.webapi;
     requires agql.steam.master;
     requires agql.dota2.webapi;
+    requires commons.cli;
 }

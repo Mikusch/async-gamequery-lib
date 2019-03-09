@@ -7,7 +7,6 @@ module agql.source.query {
     exports com.ibasco.agql.protocols.valve.source.query.pojos;
     requires agql.lib.core;
     requires org.apache.commons.lang3;
-    requires guava;
     requires slf4j.api;
     requires io.netty.transport;
     requires io.netty.buffer;
