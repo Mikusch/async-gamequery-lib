@@ -113,7 +113,7 @@ public class CocWebApiQueryEx extends BaseWebApiAuthExample {
         log.info("Retrieving Detailed Player Information");
         players.getPlayerInfo("#J0PYGCG").thenAccept(p -> log.info("Player Info: {}", p)).join();
 
-
+        log.info("Done");
     }
 
     @Override

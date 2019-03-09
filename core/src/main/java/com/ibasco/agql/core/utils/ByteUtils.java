@@ -24,11 +24,14 @@
 
 package com.ibasco.agql.core.utils;
 
+import org.apache.commons.codec.binary.Hex;
+
 public class ByteUtils {
     /**
      * <p>Convert an integer to a primitive byte array type</p>
      *
-     * @param integer The integer to be converted
+     * @param integer
+     *         The integer to be converted
      *
      * @return A byte array representation of the integer specified
      */
@@ -44,11 +47,12 @@ public class ByteUtils {
     /**
      * <p>Convert an array of bytes to it's Hex-String representation</p>
      *
-     * @param bytes The array of bytes to be converted
+     * @param bytes
+     *         The array of bytes to be converted
      *
      * @return A Hex {@link String} representation of the byte array
      */
     public static String bytesToHex(byte[] bytes) {
-        return javax.xml.bind.DatatypeConverter.printHexBinary(bytes);
+        return Hex.encodeHexString(bytes);
     }
 }

@@ -26,12 +26,13 @@ package com.ibasco.agql.protocols.supercell.coc.webapi.pojos;
 
 import com.google.gson.annotations.SerializedName;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class CocLocationClanVsRanks {
     @SerializedName("tag")
     private String tag;
-    @SerializedName("name")
 
+    @SerializedName("name")
     private String name;
 
     @SerializedName("location")
@@ -129,6 +130,6 @@ public class CocLocationClanVsRanks {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("tag", tag).append("name", name).append("location", location).append("badgeUrls", badgeUrls).append("clanLevel", clanLevel).append("members", members).append("rank", rank).append("previousRank", previousRank).append("clanVersusPoints", clanVersusPoints).toString();
+        return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE).append("tag", tag).append("name", name).append("location", location).append("badgeUrls", badgeUrls).append("clanLevel", clanLevel).append("members", members).append("rank", rank).append("previousRank", previousRank).append("clanVersusPoints", clanVersusPoints).toString();
     }
 }
