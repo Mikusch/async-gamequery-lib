@@ -27,12 +27,12 @@ package com.ibasco.agql.protocols.valve.source.query.handlers;
 import com.ibasco.agql.protocols.valve.source.query.SourceRconPacketBuilder;
 import com.ibasco.agql.protocols.valve.source.query.SourceRconResponsePacket;
 import com.ibasco.agql.protocols.valve.source.query.enums.SourceRconResponseType;
-import static com.ibasco.agql.protocols.valve.source.query.enums.SourceRconResponseType.get;
 import com.ibasco.agql.protocols.valve.source.query.packets.response.SourceRconTermResponsePacket;
 import com.ibasco.agql.protocols.valve.source.query.utils.SourceRconUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +40,8 @@ import org.slf4j.LoggerFactory;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static com.ibasco.agql.protocols.valve.source.query.enums.SourceRconResponseType.get;
 
 /**
  * <p>A Class that process incoming UDP datagrams and decodes each frame into {@link SourceRconResponsePacket}
@@ -144,7 +146,7 @@ public class SourceRconPacketDecoder extends ByteToMessageDecoder {
             log.debug(" [ ] {} = NO", desc);
         else {
             body = in.readCharSequence(bodyLength, StandardCharsets.UTF_8).toString();
-            log.debug(" [x] {} = YES (Length: {}, Body: {})", desc, bodyLength, StringUtils.replaceAll(StringUtils.truncate(body, 30), "\n", "\\\\n"));
+            log.debug(" [x] {} = YES (Length: {}, Body: {})", desc, bodyLength, RegExUtils.replaceAll(StringUtils.truncate(body, 30), "\n", "\\\\n"));
         }
 
         //Peek at the last two bytes and verify that they are null-bytes

@@ -28,7 +28,7 @@ import com.ibasco.agql.examples.base.BaseExample;
 import com.ibasco.agql.protocols.valve.source.query.SourceRconAuthStatus;
 import com.ibasco.agql.protocols.valve.source.query.client.SourceRconClient;
 import com.ibasco.agql.protocols.valve.source.query.exceptions.RconNotYetAuthException;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.RegExUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,7 +74,7 @@ public class SourceRconQueryEx extends BaseExample {
             serverAddress = new InetSocketAddress(address, port);
             if (!authenticated) {
                 password = promptInput("Please enter the rcon password", true, "", "sourceRconPass");
-                log.info("Connecting to server {}:{}, with password = {}", address, port, StringUtils.replaceAll(password, ".", "*"));
+                log.info("Connecting to server {}:{}, with password = {}", address, port, RegExUtils.replaceAll(password, ".", "*"));
                 SourceRconAuthStatus authStatus = sourceRconClient.authenticate(serverAddress, password).join();
                 if (!authStatus.isAuthenticated()) {
                     log.error("ERROR: Could not authenticate from server (Reason: {})", authStatus.getReason());
