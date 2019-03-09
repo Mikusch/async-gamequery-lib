@@ -30,7 +30,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <mvn.compiler.version>3.6.2</mvn.compiler.version>
+        <mvn.compiler.version>3.8.0</mvn.compiler.version>
         <source.version>11</source.version>
         <target.version>11</target.version>
         <github.global.server>github</github.global.server>
@@ -635,17 +635,17 @@
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>23.0</version>
+                <version>27.0.1-jre</version>
             </dependency>
             <dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
-                <version>2.8.1</version>
+                <version>2.8.5</version>
             </dependency>
             <dependency>
                 <groupId>org.asynchttpclient</groupId>
                 <artifactId>async-http-client</artifactId>
-                <version>2.5.4</version>
+                <version>2.8.1</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -659,22 +659,14 @@
                 <version>5.4.0</version>
             </dependency>
             <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-module-junit4</artifactId>
-                <version>1.7.1</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-api-easymock</artifactId>
-                <version>1.7.1</version>
-                <scope>test</scope>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.8.1</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>3.6</version>
-                <scope>compile</scope>
+                <artifactId>commons-text</artifactId>
+                <version>1.6</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -689,7 +681,7 @@
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.11</version>
+                <version>1.12</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
