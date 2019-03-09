@@ -27,6 +27,7 @@ package com.ibasco.agql.examples.base;
 import com.ibasco.agql.core.exceptions.AsyncGameLibUncheckedException;
 import com.ibasco.agql.core.utils.EncryptUtils;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,7 +135,7 @@ abstract public class BaseExample implements Closeable {
         do {
             if (!StringUtils.isEmpty(defaultValue)) {
                 if (isPassword) {
-                    System.out.printf("%s [%s]: ", message, StringUtils.replaceAll(defaultValue, ".", "*"));
+                    System.out.printf("%s [%s]: ", message, RegExUtils.replaceAll(defaultValue, ".", "*"));
                 } else
                     System.out.printf("%s [%s]: ", message, defaultValue);
             } else {
