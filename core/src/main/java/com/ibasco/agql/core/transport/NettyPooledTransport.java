@@ -72,13 +72,13 @@ abstract public class NettyPooledTransport<M extends AbstractRequest, K> extends
     };
 
     public NettyPooledTransport(ChannelType channelType) {
-        super(channelType);
-        //Initialize our pool map instance
-        poolMap = new MessageChannelPoolMap<>(this::createKey, this::createChannelPool);
+        this(channelType, null);
     }
 
     public NettyPooledTransport(ChannelType channelType, ExecutorService executor) {
         super(channelType, executor);
+        //Initialize our pool map instance
+        poolMap = new MessageChannelPoolMap<>(this::createKey, this::createChannelPool);
     }
 
     /**
