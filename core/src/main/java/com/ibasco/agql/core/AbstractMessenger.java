@@ -71,11 +71,10 @@ abstract public class AbstractMessenger<A extends AbstractRequest, B extends Abs
     }
 
     public AbstractMessenger(AbstractSessionIdFactory keyFactory, ProcessingMode processingMode) {
-        this(new DefaultSessionManager(keyFactory), processingMode, DEFAULT_REQUEST_QUEUE_CAPACITY,
-                new ScheduledThreadPoolExecutor(1, new ThreadFactoryBuilder().setNameFormat("messenger-%d").build()));
+        this(new DefaultSessionManager(keyFactory), processingMode, DEFAULT_REQUEST_QUEUE_CAPACITY);
     }
 
-    public AbstractMessenger(SessionManager sessionManager, ProcessingMode processingMode, int initQueueCapacity, ScheduledExecutorService executorService) {
+    public AbstractMessenger(SessionManager sessionManager, ProcessingMode processingMode, int initQueueCapacity) {
         //Set processing mode
         this.processingMode = processingMode;
 
@@ -86,7 +85,7 @@ abstract public class AbstractMessenger<A extends AbstractRequest, B extends Abs
         this.requestQueue = new PriorityBlockingQueue<>(initQueueCapacity, new RequestComparator());
         this.transport = createTransportService();
         configureMappings(this.sessionManager.getLookupMap());
-        this.messengerService = executorService;
+        this.messengerService = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("messenger-%d").build());
         this.requestProcessor = (processingMode == ProcessingMode.SYNCHRONOUS) ? this::processSync : this::processAsync;
     }
 
@@ -162,35 +161,34 @@ abstract public class AbstractMessenger<A extends AbstractRequest, B extends Abs
     public void accept(B response, Throwable error) {
         log.debug("Receiving response '{}'", response, error);
 
-        synchronized (this) {
-            if (error != null && error instanceof ResponseException) {
-                ResponseException ex = (ResponseException) error;
-                if (ex.getOriginatingRequest() != null) {
-                    SessionId id = sessionManager.getId(ex.getOriginatingRequest());
-                    SessionValue<A, B> session = sessionManager.getSession(id);
-                    if (session != null) {
-                        final CompletableFuture<B> clientPromise = session.getClientPromise();
-                        clientPromise.completeExceptionally(ex);
-                    }
+        if (error instanceof ResponseException) {
+            ResponseException ex = (ResponseException) error;
+            if (ex.getOriginatingRequest() != null) {
+                SessionId id = sessionManager.getId(ex.getOriginatingRequest());
+                SessionValue<A, B> session = sessionManager.getSession(id);
+                if (session != null) {
+                    final CompletableFuture<B> clientPromise = session.getClientPromise();
+                    clientPromise.completeExceptionally(ex);
                 }
-                return;
             }
-
-            //Retrieve the existing session for this response
-            final SessionValue<A, B> session = sessionManager.getSession(response);
-            if (session != null) {
-                //1) Retrieve our client promise from the session
-                final CompletableFuture<B> clientPromise = session.getClientPromise();
-
-                //2) Notify the client that we have successfully received a response from the server
-                if (clientPromise.complete(response)) {
-                    log.debug("Notified client of completion event : {}", session.getId());
-                } else
-                    log.debug("Unable to transition session to completion state : {}", session.getId());
-            } else {
-                log.debug("No associated session is found for Response '{}'", response);
-            }
+            return;
         }
+
+        //Retrieve the existing session for this response
+        final SessionValue<A, B> session = sessionManager.getSession(response);
+        if (session != null) {
+            //1) Retrieve our client promise from the session
+            final CompletableFuture<B> clientPromise = session.getClientPromise();
+
+            //2) Notify the client that we have successfully received a response from the server
+            if (clientPromise.complete(response)) {
+                log.debug("Notified client of completion event : {}", session.getId());
+            } else
+                log.debug("Unable to transition session to completion state : {}", session.getId());
+        } else {
+            log.debug("No associated session is found for Response '{}'", response);
+        }
+
     }
 
     /**
