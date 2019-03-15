@@ -69,7 +69,19 @@ public class SourceRconClient extends AbstractClient<SourceRconRequest, SourceRc
      * Default Constructor. By default, terminating packets are sent for every command
      */
     public SourceRconClient() {
-        this(true, null);
+        this(true);
+    }
+
+    /**
+     * Create new {@link SourceRconClient} using the default {@link ExecutorService}
+     *
+     * @param sendTerminatingPacket
+     *         Set to <code>true</code> to send terminator packets for every command.
+     *
+     * @see #SourceRconClient(boolean, ExecutorService)
+     */
+    public SourceRconClient(boolean sendTerminatingPacket) {
+        this(sendTerminatingPacket, null);
     }
 
     /**
