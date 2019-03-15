@@ -52,8 +52,6 @@ public class SourceQueryMessenger extends GameServerMessenger<SourceServerReques
 
     private static final Logger log = LoggerFactory.getLogger(SourceQueryMessenger.class);
 
-    private ExecutorService executorService;
-
     public SourceQueryMessenger() {
         //Use the default session manager
         this(ProcessingMode.ASYNCHRONOUS, null);
@@ -61,13 +59,12 @@ public class SourceQueryMessenger extends GameServerMessenger<SourceServerReques
 
     public SourceQueryMessenger(ProcessingMode processingMode, ExecutorService executorService) {
         //Use the default session manager
-        super(ProcessingMode.ASYNCHRONOUS);
-        this.executorService = executorService;
+        super(ProcessingMode.ASYNCHRONOUS, executorService);
     }
 
     @Override
     protected Transport<SourceServerRequest> createTransportService() {
-        NettyPooledUdpTransport<SourceServerRequest> transport = new NettyPooledUdpTransport<>(ChannelType.NIO_UDP, executorService);
+        NettyPooledUdpTransport<SourceServerRequest> transport = new NettyPooledUdpTransport<>(ChannelType.NIO_UDP, getExecutorService());
         transport.setChannelInitializer(new SourceQueryChannelInitializer(this));
         transport.addChannelOption(ChannelOption.SO_SNDBUF, 1048576);
         transport.addChannelOption(ChannelOption.SO_RCVBUF, 1048576);

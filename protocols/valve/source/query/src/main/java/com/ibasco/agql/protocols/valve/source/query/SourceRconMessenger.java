@@ -53,8 +53,6 @@ public class SourceRconMessenger extends GameServerMessenger<SourceRconRequest, 
 
     private boolean terminatingPacketsEnabled = false;
 
-    private ExecutorService executorService;
-
     public SourceRconMessenger(boolean terminatingPacketsEnabled) {
         this(terminatingPacketsEnabled, null);
     }
@@ -62,12 +60,11 @@ public class SourceRconMessenger extends GameServerMessenger<SourceRconRequest, 
     public SourceRconMessenger(boolean terminatingPacketsEnabled, ExecutorService executorService) {
         super(new SourceRconSessionIdFactory(), ProcessingMode.SYNCHRONOUS);
         this.terminatingPacketsEnabled = terminatingPacketsEnabled;
-        this.executorService = executorService;
     }
 
     @Override
     protected Transport<SourceRconRequest> createTransportService() {
-        NettyPooledTcpTransport<SourceRconRequest> transport = new NettyPooledTcpTransport<>(ChannelType.NIO_TCP, this.executorService);
+        NettyPooledTcpTransport<SourceRconRequest> transport = new NettyPooledTcpTransport<>(ChannelType.NIO_TCP, getExecutorService());
         transport.setChannelInitializer(new SourceRconChannelInitializer(this));
         transport.addChannelOption(ChannelOption.SO_SNDBUF, 1048576 * 4);
         transport.addChannelOption(ChannelOption.SO_RCVBUF, 1048576 * 4);

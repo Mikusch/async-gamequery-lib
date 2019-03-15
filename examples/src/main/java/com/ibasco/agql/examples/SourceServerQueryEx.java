@@ -43,6 +43,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SourceServerQueryEx extends BaseExample {
@@ -191,9 +193,10 @@ public class SourceServerQueryEx extends BaseExample {
 
     @Override
     public void run() throws Exception {
+        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() + 1);
         //Inititalize client
-        sourceQueryClient = new SourceQueryClient();
-        masterServerQueryClient = new MasterServerQueryClient();
+        sourceQueryClient = new SourceQueryClient(executorService);
+        masterServerQueryClient = new MasterServerQueryClient(executorService);
 
         log.info("NOTE: Depending on your selected criteria, the application may time some time to complete. You can review the log file(s) once the program exits.");
 

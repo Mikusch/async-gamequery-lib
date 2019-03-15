@@ -65,22 +65,28 @@ abstract public class AbstractMessenger<A extends AbstractRequest, B extends Abs
     private PriorityBlockingQueue<RequestDetails<A, B>> requestQueue;
     private Consumer<PriorityBlockingQueue<RequestDetails<A, B>>> requestProcessor;
     private ProcessingMode processingMode;
+    private ExecutorService executorService;
 
     public AbstractMessenger(ProcessingMode processingMode) {
         this(new DefaultSessionIdFactory(), processingMode);
     }
 
     public AbstractMessenger(AbstractSessionIdFactory keyFactory, ProcessingMode processingMode) {
-        this(new DefaultSessionManager(keyFactory), processingMode, DEFAULT_REQUEST_QUEUE_CAPACITY);
+        this(new DefaultSessionManager(keyFactory), processingMode, DEFAULT_REQUEST_QUEUE_CAPACITY, null);
     }
 
-    public AbstractMessenger(SessionManager sessionManager, ProcessingMode processingMode, int initQueueCapacity) {
+    public AbstractMessenger(AbstractSessionIdFactory keyFactory, ProcessingMode processingMode, ExecutorService executorService) {
+        this(new DefaultSessionManager(keyFactory), processingMode, DEFAULT_REQUEST_QUEUE_CAPACITY, executorService);
+    }
+
+    public AbstractMessenger(SessionManager sessionManager, ProcessingMode processingMode, int initQueueCapacity, ExecutorService executorService) {
         //Set processing mode
         this.processingMode = processingMode;
 
         log.debug("Using Processing Mode : {}", processingMode);
 
         //Use the default session manager if not specified
+        this.executorService = executorService;
         this.sessionManager = (sessionManager != null) ? sessionManager : new DefaultSessionManager<>(new DefaultSessionIdFactory());
         this.requestQueue = new PriorityBlockingQueue<>(initQueueCapacity, new RequestComparator());
         this.transport = createTransportService();
@@ -99,8 +105,12 @@ abstract public class AbstractMessenger<A extends AbstractRequest, B extends Abs
                 if (processRequests.get()) {
                     requestProcessor.accept(requestQueue);
                 }
-            }, 0, 10, TimeUnit.MILLISECONDS);
+            }, 0, 10, TimeUnit.NANOSECONDS);
         }
+    }
+
+    protected ExecutorService getExecutorService() {
+        return executorService;
     }
 
     /**

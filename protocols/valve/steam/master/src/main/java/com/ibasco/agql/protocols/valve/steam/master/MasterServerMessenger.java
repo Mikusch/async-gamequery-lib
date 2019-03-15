@@ -39,20 +39,17 @@ import java.util.concurrent.ExecutorService;
  */
 public class MasterServerMessenger extends GameServerMessenger<MasterServerRequest, MasterServerResponse> {
 
-    private ExecutorService executorService;
-
     public MasterServerMessenger() {
         this(null);
     }
 
     public MasterServerMessenger(ExecutorService executorService) {
-        super(ProcessingMode.ASYNCHRONOUS);
-        this.executorService = executorService;
+        super(ProcessingMode.ASYNCHRONOUS, executorService);
     }
 
     @Override
     protected Transport<MasterServerRequest> createTransportService() {
-        NettyPooledUdpTransport<MasterServerRequest> transport = new NettyPooledUdpTransport<>(ChannelType.NIO_UDP, executorService);
+        NettyPooledUdpTransport<MasterServerRequest> transport = new NettyPooledUdpTransport<>(ChannelType.NIO_UDP, getExecutorService());
         //Set our channel initializer
         transport.setChannelInitializer(new MasterServerChannelInitializer(this));
         //Channel Options
