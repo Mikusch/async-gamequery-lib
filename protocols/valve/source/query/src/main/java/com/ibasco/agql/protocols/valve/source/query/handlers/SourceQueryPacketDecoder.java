@@ -55,7 +55,7 @@ public class SourceQueryPacketDecoder extends MessageToMessageDecoder<DatagramPa
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "Duplicates"})
     protected void decode(ChannelHandlerContext ctx, DatagramPacket msg, List<Object> out) throws Exception {
         //Create our response packet from the datagram we received
         final SourceResponsePacket packet = builder.construct(msg.content());
