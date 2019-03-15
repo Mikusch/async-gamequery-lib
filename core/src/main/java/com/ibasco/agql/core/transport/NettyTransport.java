@@ -49,7 +49,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unchecked")
-abstract public class NettyTransport<Msg extends AbstractRequest> implements Transport<Msg> {
+abstract public class NettyTransport<M extends AbstractRequest> implements Transport<M> {
     private Bootstrap bootstrap;
     private EventLoopGroup eventLoopGroup;
     private final ByteBufAllocator allocator = PooledByteBufAllocator.DEFAULT;
@@ -70,9 +70,7 @@ abstract public class NettyTransport<Msg extends AbstractRequest> implements Tra
             throw new IllegalStateException("No channel type has been specified");
 
         //Pick the proper event loop group
-        if (eventLoopGroup == null) {
-            eventLoopGroup = createEventLoopGroup(channelType);
-        }
+        eventLoopGroup = createEventLoopGroup(channelType);
 
         //Default Channel Options
         addChannelOption(ChannelOption.ALLOCATOR, allocator);
@@ -105,12 +103,12 @@ abstract public class NettyTransport<Msg extends AbstractRequest> implements Tra
 
     @Override
     @SuppressWarnings("unchecked")
-    public <V> CompletableFuture<V> send(Msg message) {
+    public <V> CompletableFuture<V> send(M message) {
         message.setSender((InetSocketAddress) bootstrap.config().localAddress());
         return (CompletableFuture<V>) send(message, true);
     }
 
-    public final CompletableFuture<Void> send(Msg message, boolean flushImmediately) {
+    public final CompletableFuture<Void> send(M message, boolean flushImmediately) {
         //Obtain a channel then write to it once acquired
         return getChannel(message).thenApply(this::applyDefaultChannelAttributes).thenCompose(channel -> writeToChannel(channel, message, flushImmediately));
     }
@@ -133,7 +131,7 @@ abstract public class NettyTransport<Msg extends AbstractRequest> implements Tra
      *
      * @return A {@link CompletableFuture} with return type of {@link Channel} (The channel used for the transport)
      */
-    private CompletableFuture<Void> writeToChannel(Channel channel, Msg data, boolean flushImmediately) {
+    private CompletableFuture<Void> writeToChannel(Channel channel, M data, boolean flushImmediately) {
         final CompletableFuture<Void> writeResultFuture = new CompletableFuture<>();
         log.debug("Writing data '{}' to channel : {}", data, channel);
         final ChannelFuture writeFuture = (flushImmediately) ? channel.writeAndFlush(data) : channel.write(data);
@@ -222,5 +220,5 @@ abstract public class NettyTransport<Msg extends AbstractRequest> implements Tra
         }
     }
 
-    abstract public CompletableFuture<Channel> getChannel(Msg message);
+    abstract public CompletableFuture<Channel> getChannel(M message);
 }
