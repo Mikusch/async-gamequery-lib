@@ -58,11 +58,11 @@ abstract public class NettyTransport<M extends AbstractRequest> implements Trans
     private ExecutorService executorService;
 
     public NettyTransport(ChannelType channelType) {
-        this(channelType, Executors.newFixedThreadPool(8, new ThreadFactoryBuilder().setNameFormat("transport-el-%d").setDaemon(true).build()));
+        this(channelType, null);
     }
 
     public NettyTransport(ChannelType channelType, ExecutorService executor) {
-        executorService = executor;
+        executorService = (executor == null) ? Executors.newFixedThreadPool(8, new ThreadFactoryBuilder().setNameFormat("transport-el-%d").setDaemon(true).build()) : executor;
         bootstrap = new Bootstrap();
 
         //Make sure we have a type set
