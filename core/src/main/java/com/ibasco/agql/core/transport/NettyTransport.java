@@ -62,7 +62,7 @@ abstract public class NettyTransport<M extends AbstractRequest> implements Trans
     }
 
     public NettyTransport(ChannelType channelType, ExecutorService executor) {
-        executorService = (executor == null) ? Executors.newFixedThreadPool(8, new ThreadFactoryBuilder().setNameFormat("transport-el-%d").setDaemon(true).build()) : executor;
+        executorService = (executor == null) ? Executors.newFixedThreadPool(calcNumOfThreads(), new ThreadFactoryBuilder().setNameFormat("transport-el-%d").setDaemon(true).build()) : executor;
         bootstrap = new Bootstrap();
 
         //Make sure we have a type set
@@ -83,6 +83,10 @@ abstract public class NettyTransport<M extends AbstractRequest> implements Trans
 
         //Initialize bootstrap
         bootstrap.group(eventLoopGroup).channel(channelType.getChannelClass());
+    }
+
+    private int calcNumOfThreads() {
+        return Runtime.getRuntime().availableProcessors() + 1;
     }
 
     protected ChannelFuture bind() {
