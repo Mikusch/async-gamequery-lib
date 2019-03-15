@@ -32,19 +32,27 @@ import com.ibasco.agql.core.transport.udp.NettyPooledUdpTransport;
 import io.netty.channel.ChannelOption;
 
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Created by raffy on 10/22/2016.
  */
 public class MasterServerMessenger extends GameServerMessenger<MasterServerRequest, MasterServerResponse> {
 
+    private ExecutorService executorService;
+
     public MasterServerMessenger() {
+        this(null);
+    }
+
+    public MasterServerMessenger(ExecutorService executorService) {
         super(ProcessingMode.ASYNCHRONOUS);
+        this.executorService = executorService;
     }
 
     @Override
     protected Transport<MasterServerRequest> createTransportService() {
-        NettyPooledUdpTransport<MasterServerRequest> transport = new NettyPooledUdpTransport<>(ChannelType.NIO_UDP);
+        NettyPooledUdpTransport<MasterServerRequest> transport = new NettyPooledUdpTransport<>(ChannelType.NIO_UDP, executorService);
         //Set our channel initializer
         transport.setChannelInitializer(new MasterServerChannelInitializer(this));
         //Channel Options

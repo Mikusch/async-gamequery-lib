@@ -32,6 +32,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.ibasco.agql.core.client.AbstractGameServerClient;
+import com.ibasco.agql.core.enums.ProcessingMode;
 import com.ibasco.agql.core.enums.RequestPriority;
 import com.ibasco.agql.core.exceptions.CacheTimeoutException;
 import com.ibasco.agql.protocols.valve.source.query.SourceQueryMessenger;
@@ -75,7 +76,17 @@ public class SourceQueryClient extends AbstractGameServerClient<SourceServerRequ
      * Default Constructor using the {@link SourceQueryMessenger}
      */
     public SourceQueryClient() {
-        super(new SourceQueryMessenger());
+        this(null);
+    }
+
+    /**
+     * Create a new {@link SourceQueryClient} with a custom {@link ExecutorService}
+     *
+     * @param executorService
+     *         The {@link ExecutorService} to be used by the underlying network transport service
+     */
+    public SourceQueryClient(ExecutorService executorService) {
+        super(new SourceQueryMessenger(ProcessingMode.ASYNCHRONOUS, executorService));
     }
 
     /**

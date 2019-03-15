@@ -43,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Created by raffy on 9/14/2016.
@@ -51,14 +52,22 @@ public class SourceQueryMessenger extends GameServerMessenger<SourceServerReques
 
     private static final Logger log = LoggerFactory.getLogger(SourceQueryMessenger.class);
 
+    private ExecutorService executorService;
+
     public SourceQueryMessenger() {
         //Use the default session manager
+        this(ProcessingMode.ASYNCHRONOUS, null);
+    }
+
+    public SourceQueryMessenger(ProcessingMode processingMode, ExecutorService executorService) {
+        //Use the default session manager
         super(ProcessingMode.ASYNCHRONOUS);
+        this.executorService = executorService;
     }
 
     @Override
     protected Transport<SourceServerRequest> createTransportService() {
-        NettyPooledUdpTransport<SourceServerRequest> transport = new NettyPooledUdpTransport<>(ChannelType.NIO_UDP);
+        NettyPooledUdpTransport<SourceServerRequest> transport = new NettyPooledUdpTransport<>(ChannelType.NIO_UDP, executorService);
         transport.setChannelInitializer(new SourceQueryChannelInitializer(this));
         transport.addChannelOption(ChannelOption.SO_SNDBUF, 1048576);
         transport.addChannelOption(ChannelOption.SO_RCVBUF, 1048576);

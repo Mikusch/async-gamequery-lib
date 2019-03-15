@@ -40,10 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.util.Vector;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -52,8 +49,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class MasterServerQueryClient extends AbstractGameServerClient<MasterServerRequest, MasterServerResponse, MasterServerMessenger> {
     private static final Logger log = LoggerFactory.getLogger(MasterServerQueryClient.class);
 
+    /**
+     * Default constructor
+     */
     public MasterServerQueryClient() {
-        super(new MasterServerMessenger());
+        this(null);
+    }
+
+    /**
+     * Create new {@link MasterServerQueryClient} with a custom {@link ExecutorService}
+     *
+     * @param executorService
+     *         The {@link ExecutorService} to be used by the underlying network transport service
+     */
+    public MasterServerQueryClient(ExecutorService executorService) {
+        super(new MasterServerMessenger(executorService));
     }
 
     /**

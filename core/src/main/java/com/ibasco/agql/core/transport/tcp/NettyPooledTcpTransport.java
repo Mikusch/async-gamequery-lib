@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 
 /**
  * <p>A Pooled TCP Transport implementation which creates and reuse channels stored within a pool map.
@@ -48,7 +49,11 @@ public class NettyPooledTcpTransport<M extends AbstractRequest> extends NettyPoo
     private static final Logger log = LoggerFactory.getLogger(NettyPooledTcpTransport.class);
 
     public NettyPooledTcpTransport(ChannelType channelType) {
-        super(channelType);
+        this(channelType, null);
+    }
+
+    public NettyPooledTcpTransport(ChannelType channelType, ExecutorService executor) {
+        super(channelType, executor);
     }
 
     @Override

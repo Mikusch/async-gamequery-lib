@@ -45,6 +45,7 @@ import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
 
 /**
  * A client used for executing commands to the Source Server using the Valve RCON Protocol
@@ -68,7 +69,7 @@ public class SourceRconClient extends AbstractClient<SourceRconRequest, SourceRc
      * Default Constructor. By default, terminating packets are sent for every command
      */
     public SourceRconClient() {
-        this(true);
+        this(true, null);
     }
 
     /**
@@ -78,9 +79,11 @@ public class SourceRconClient extends AbstractClient<SourceRconRequest, SourceRc
      *
      * @param sendTerminatingPacket
      *         Set to <code>true</code> to send terminator packets for every command.
+     * @param executorService
+     *         The {@link ExecutorService} to be used by the underlying network transport service
      */
-    public SourceRconClient(boolean sendTerminatingPacket) {
-        super(new SourceRconMessenger(sendTerminatingPacket));
+    public SourceRconClient(boolean sendTerminatingPacket, ExecutorService executorService) {
+        super(new SourceRconMessenger(sendTerminatingPacket, executorService));
         credentialsMap = new ConcurrentHashMap<>();
     }
 
