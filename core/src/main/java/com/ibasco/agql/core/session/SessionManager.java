@@ -33,7 +33,7 @@ import java.io.Closeable;
 import java.util.Collection;
 import java.util.Map;
 
-public interface SessionManager<Req extends AbstractRequest, Res extends AbstractResponse> extends Closeable {
+public interface SessionManager<R extends AbstractRequest, S extends AbstractResponse> extends Closeable {
     /**
      * Returns the {@link SessionValue} based on the {@link SessionId} provided.
      * If multiple values exists for the same key, only the head {@link SessionValue} element will be retrieved.
@@ -43,7 +43,7 @@ public interface SessionManager<Req extends AbstractRequest, Res extends Abstrac
      *
      * @return A {@link SessionValue} or NULL if no session found for the specified id
      */
-    SessionValue<Req, Res> getSession(SessionId id);
+    SessionValue<R, S> getSession(SessionId id);
 
     /**
      * Get session based on the {@link AbstractMessage} instance
@@ -52,7 +52,7 @@ public interface SessionManager<Req extends AbstractRequest, Res extends Abstrac
      *
      * @return A {@link SessionValue} instance if found. Null if a session does not exists for the specified {@link AbstractMessage}
      */
-    SessionValue<Req, Res> getSession(AbstractMessage message);
+    SessionValue<R, S> getSession(AbstractMessage message);
 
     /**
      * Returns the session id from the registry.
@@ -71,7 +71,7 @@ public interface SessionManager<Req extends AbstractRequest, Res extends Abstrac
      *
      * @return A {@link SessionId} if the request has been successfully registered.
      */
-    SessionId register(RequestDetails<Req, Res> requestDetails);
+    SessionId register(RequestDetails<R, S> requestDetails);
 
     /**
      * Removes the associated session from the registry (if available) using a {@link SessionId} instance.
@@ -107,11 +107,11 @@ public interface SessionManager<Req extends AbstractRequest, Res extends Abstrac
      *
      * @return a collection containing entries of {@link SessionId} and {@link SessionValue} pair.
      */
-    Collection<Map.Entry<SessionId, SessionValue<Req, Res>>> getSessionEntries();
+    Collection<Map.Entry<SessionId, SessionValue<R, S>>> getSessionEntries();
 
-    Class<? extends Res> findResponseClass(Req request);
+    Class<? extends S> findResponseClass(R request);
 
-    Map<Class<? extends Req>, Class<? extends Res>> getLookupMap();
+    Map<Class<? extends R>, Class<? extends S>> getLookupMap();
 
     SessionIdFactory getSessionIdFactory();
 }

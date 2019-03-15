@@ -25,17 +25,16 @@
 package com.ibasco.agql.core;
 
 import com.ibasco.agql.core.enums.RequestPriority;
-import com.ibasco.agql.core.utils.ConcurrentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
-abstract public class AbstractClient<Req extends AbstractRequest,
-        Res extends AbstractResponse,
-        M extends AbstractMessenger<Req, Res>>
-        implements Client<Req, Res> {
+abstract public class AbstractClient<R extends AbstractRequest,
+        S extends AbstractResponse,
+        M extends AbstractMessenger<R, S>>
+        implements Client<R, S> {
     private M messenger;
 
     private static final Logger log = LoggerFactory.getLogger(AbstractClient.class);
@@ -45,19 +44,19 @@ abstract public class AbstractClient<Req extends AbstractRequest,
     }
 
     @Override
-    public <V> CompletableFuture<V> sendRequest(Req message) {
+    public <V> CompletableFuture<V> sendRequest(R message) {
         return sendRequest(message, AbstractMessenger.DEFAULT_REQUEST_PRIORITY);
     }
 
-    protected <V> CompletableFuture<V> sendRequest(Req message, RequestPriority priority) {
+    protected <V> CompletableFuture<V> sendRequest(R message, RequestPriority priority) {
         log.debug("Client '{}' Sending request : {}", this.getClass().getSimpleName(), message);
         //Send the request then transform the result once a response is received
-        ConcurrentUtils.sleepUninterrupted(10);
+        //ConcurrentUtils.sleepUninterrupted(10);
         return messenger.send(message, priority).thenApply(this::convertToResultType);
     }
 
     @SuppressWarnings("unchecked")
-    private <V> V convertToResultType(Res message) {
+    private <V> V convertToResultType(S message) {
         return (V) message.getMessage();
     }
 

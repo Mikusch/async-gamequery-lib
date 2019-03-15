@@ -39,18 +39,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Contains all the properties associated with this request
  */
-public class RequestDetails<Req extends AbstractRequest, Res extends AbstractResponse> implements Comparable<RequestDetails> {
+public class RequestDetails<R extends AbstractRequest, S extends AbstractResponse> implements Comparable<RequestDetails> {
     private static final Logger log = LoggerFactory.getLogger(RequestDetails.class);
-    private Req request;
-    private CompletableFuture<Res> clientPromise;
+    private R request;
+    private CompletableFuture<S> clientPromise;
     private RequestStatus status;
     private RequestPriority priority;
-    private Transport<Req> transport;
-    private Class<Res> expectedResponseClass;
+    private Transport<R> transport;
+    private Class<S> expectedResponseClass;
     private AtomicInteger retries = new AtomicInteger(0);
     private long timeCreated;
 
-    public RequestDetails(Req request, CompletableFuture<Res> clientPromise, RequestPriority priority, Transport<Req> transport) {
+    public RequestDetails(R request, CompletableFuture<S> clientPromise, RequestPriority priority, Transport<R> transport) {
         this.status = RequestStatus.NEW;
         this.request = request;
         this.clientPromise = clientPromise;
@@ -64,7 +64,7 @@ public class RequestDetails<Req extends AbstractRequest, Res extends AbstractRes
      *
      * @param requestDetails An {@link RequestDetails} that will be used as reference for the copy
      */
-    public RequestDetails(RequestDetails<Req, Res> requestDetails) {
+    public RequestDetails(RequestDetails<R, S> requestDetails) {
         this.request = requestDetails.getRequest();
         this.clientPromise = requestDetails.getClientPromise();
         this.status = requestDetails.getStatus();
@@ -73,19 +73,19 @@ public class RequestDetails<Req extends AbstractRequest, Res extends AbstractRes
         this.expectedResponseClass = requestDetails.getExpectedResponseClass();
     }
 
-    public Class<Res> getExpectedResponseClass() {
+    public Class<S> getExpectedResponseClass() {
         return expectedResponseClass;
     }
 
-    public void setExpectedResponseClass(Class<Res> expectedResponseClass) {
+    public void setExpectedResponseClass(Class<S> expectedResponseClass) {
         this.expectedResponseClass = expectedResponseClass;
     }
 
-    public synchronized CompletableFuture<Res> getClientPromise() {
+    public synchronized CompletableFuture<S> getClientPromise() {
         return clientPromise;
     }
 
-    public synchronized void setClientPromise(CompletableFuture<Res> clientPromise) {
+    public synchronized void setClientPromise(CompletableFuture<S> clientPromise) {
         this.clientPromise = clientPromise;
     }
 
@@ -101,11 +101,11 @@ public class RequestDetails<Req extends AbstractRequest, Res extends AbstractRes
         return retries.get();
     }
 
-    public synchronized void setRequest(Req request) {
+    public synchronized void setRequest(R request) {
         this.request = request;
     }
 
-    public synchronized Req getRequest() {
+    public synchronized R getRequest() {
         return request;
     }
 
@@ -121,7 +121,7 @@ public class RequestDetails<Req extends AbstractRequest, Res extends AbstractRes
         return this.retries.getAndAdd(1);
     }
 
-    public Transport<Req> getTransport() {
+    public Transport<R> getTransport() {
         return transport;
     }
 
