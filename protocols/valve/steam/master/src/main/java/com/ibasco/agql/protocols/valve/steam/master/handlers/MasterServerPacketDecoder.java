@@ -54,15 +54,13 @@ public class MasterServerPacketDecoder extends MessageToMessageDecoder<DatagramP
         final MasterServerResponsePacket packet = builder.construct(msg.content());
         if (packet != null) {
             final MasterServerResponse response = new MasterServerResponse();
-            if (response != null) {
-                response.setSender(msg.sender());
-                response.setRecipient(msg.recipient());
-                response.setResponsePacket(packet);
-                log.debug("Receiving Data '{}' from '{}' using Channel Id: {}", response.getClass().getSimpleName(), ctx.channel().remoteAddress(), ctx.channel().id());
-                //Pass the message back to the messenger
-                responseCallback.accept(response, null);
-                return;
-            }
+            response.setSender(msg.sender());
+            response.setRecipient(msg.recipient());
+            response.setResponsePacket(packet);
+            log.debug("Receiving Data '{}' from '{}' using Channel Id: {}", response.getClass().getSimpleName(), ctx.channel().remoteAddress(), ctx.channel().id());
+            //Pass the message back to the messenger
+            responseCallback.accept(response, null);
+            return;
         }
         throw new IllegalStateException("No response packet found for the incoming datagram");
     }
