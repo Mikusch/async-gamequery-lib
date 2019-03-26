@@ -38,7 +38,7 @@ import java.util.function.BiConsumer;
 
 public class MasterServerPacketDecoder extends MessageToMessageDecoder<DatagramPacket> {
 
-    private static final Logger log = LoggerFactory.getLogger(MasterServerPacketBuilder.class);
+    private static final Logger log = LoggerFactory.getLogger(MasterServerPacketDecoder.class);
     private BiConsumer<MasterServerResponse, Throwable> responseCallback;
     private MasterServerPacketBuilder builder;
 
