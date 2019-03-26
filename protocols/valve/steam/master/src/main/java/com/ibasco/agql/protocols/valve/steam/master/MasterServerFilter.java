@@ -42,8 +42,6 @@ public final class MasterServerFilter {
 
     private Map<FilterKey, Object> filterMap = new LinkedHashMap<>();
 
-    private boolean allServers;
-
     protected static class FilterKey {
 
         private static int ctr;
