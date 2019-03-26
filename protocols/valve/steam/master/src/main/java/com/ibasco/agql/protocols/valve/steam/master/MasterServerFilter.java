@@ -26,17 +26,64 @@ package com.ibasco.agql.protocols.valve.steam.master;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
+
 /**
  * <p>A Master Server Filter Utility class</p>
+ *
+ * @author Rafael Ibasco
  */
 public final class MasterServerFilter {
-    private StringBuffer filter;
 
-    /**
-     * Default constructor
-     */
-    private MasterServerFilter() {
-        filter = new StringBuffer();
+    private static final String[] specialFilters = new String[] {"nand", "nor", "napp"};
+
+    private Map<FilterKey, Object> filterMap = new LinkedHashMap<>();
+
+    private boolean allServers;
+
+    protected static class FilterKey {
+
+        private static int ctr;
+
+        int id;
+
+        String key;
+
+        FilterKey(String key) {
+            id = ctr++;
+            this.key = key;
+        }
+
+        boolean isSpecial() {
+            return Arrays.stream(specialFilters).anyMatch(p -> p.contains(key));
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            FilterKey that = (FilterKey) o;
+
+            if (isSpecial())
+                return key.equals(that.key) && (id == that.id);
+
+            return key.equals(that.key);
+        }
+
+        @Override
+        public int hashCode() {
+            if (isSpecial())
+                return Objects.hash(key, id);
+            return Objects.hash(key);
+        }
+
+        @Override
+        public String toString() {
+            return key;
+        }
     }
 
     /**
@@ -49,13 +96,12 @@ public final class MasterServerFilter {
     }
 
     /**
-     * A filter to return all available servers
+     * A filter to return all available servers. Please note that applying this filter will override all previously defined filters of this instance.
      *
      * @return Instance of {@link MasterServerFilter}
      */
     public MasterServerFilter allServers() {
-        filter.setLength(0);
-        return this;
+        return create("allServers", null);
     }
 
     /**
@@ -67,6 +113,7 @@ public final class MasterServerFilter {
      * @return Instance of {@link MasterServerFilter}
      */
     public MasterServerFilter isSpecProxy(Boolean value) {
+
         return create("proxy", value);
     }
 
@@ -79,46 +126,54 @@ public final class MasterServerFilter {
      * @return Instance of {@link MasterServerFilter}
      */
     public MasterServerFilter isFull(Boolean value) {
+
         return create("full", value);
     }
 
     /**
      * <p>Servers that are not empty</p>
      *
-     * @param value Set to true to only filter servers that are empty
+     * @param value
+     *         Set to true to only filter servers that are empty
      *
      * @return Instance of {@link MasterServerFilter}
      */
     public MasterServerFilter isEmpty(Boolean value) {
+
         return create("empty", value);
     }
 
     /**
      * <p>Filter for password protected servers</p>
      *
-     * @param value Set to true to only filter servers that are password protected
+     * @param value
+     *         Set to true to only filter servers that are password protected
      *
      * @return Instance of {@link MasterServerFilter}
      */
     public MasterServerFilter isPasswordProtected(Boolean value) {
+
         return create("password", value);
     }
 
     /**
      * <p>Servers running on a Linux platform</p>
      *
-     * @param value Set to true to filter servers only running under linux
+     * @param value
+     *         Set to true to filter servers only running under linux
      *
      * @return Instance of {@link MasterServerFilter}
      */
     public MasterServerFilter isLinuxServer(Boolean value) {
+
         return create("linux", value);
     }
 
     /**
      * <p>Servers running the specified map (ex. cs_italy)</p>
      *
-     * @param value Map name
+     * @param value
+     *         Map name
      *
      * @return Instance of {@link MasterServerFilter}
      */
@@ -129,7 +184,8 @@ public final class MasterServerFilter {
     /**
      * <p>Servers running the specified modification (ex. cstrike)</p>
      *
-     * @param value The mode/game directory name (e.g. cstrike)
+     * @param value
+     *         The mode/game directory name (e.g. cstrike)
      *
      * @return Instance of {@link MasterServerFilter}
      */
@@ -140,22 +196,26 @@ public final class MasterServerFilter {
     /**
      * <p>Servers using anti-cheat technology (VAC, but potentially others as well)</p>
      *
-     * @param value Set to true to filter only secure servers (VAC protected)
+     * @param value
+     *         Set to true to filter only secure servers (VAC protected)
      *
      * @return Instance of {@link MasterServerFilter}
      */
     public MasterServerFilter isSecure(Boolean value) {
+
         return create("secure", value);
     }
 
     /**
      * <p>Servers running dedicated</p>
      *
-     * @param value Set to true to filter only dedicated servers
+     * @param value
+     *         Set to true to filter only dedicated servers
      *
      * @return Instance of {@link MasterServerFilter}
      */
     public MasterServerFilter dedicated(Boolean value) {
+
         return create("dedicated", value);
     }
 
@@ -197,11 +257,13 @@ public final class MasterServerFilter {
     /**
      * <p>Servers that are empty</p>
      *
-     * @param value Set to true to filter only empty servers
+     * @param value
+     *         Set to true to filter only empty servers
      *
      * @return Instance of {@link MasterServerFilter}
      */
     public MasterServerFilter hasNoPlayers(Boolean value) {
+
         return create("noplayers", value);
     }
 
@@ -274,6 +336,7 @@ public final class MasterServerFilter {
      * @return Instance of {@link MasterServerFilter}
      */
     public MasterServerFilter onlyOneServerPerUniqueIp(Boolean value) {
+
         return create("collapse_addr_hash", value);
     }
 
@@ -292,11 +355,13 @@ public final class MasterServerFilter {
     /**
      * <p>Servers that are whitelisted</p>
      *
-     * @param value Set to true to filter only whitelisted servers
+     * @param value
+     *         Set to true to filter only whitelisted servers
      *
      * @return Instance of {@link MasterServerFilter}
      */
     public MasterServerFilter isWhitelisted(Boolean value) {
+
         return create("white", value);
     }
 
@@ -309,6 +374,8 @@ public final class MasterServerFilter {
      * @return Instance of {@link MasterServerFilter}
      */
     public MasterServerFilter appId(Integer appId) {
+        if (appId == null)
+            return this;
         if (appId > 0)
             return create("appId", appId);
         return this;
@@ -325,21 +392,24 @@ public final class MasterServerFilter {
      * @return Instance of {@link MasterServerFilter}
      */
     private MasterServerFilter create(String key, Object value) {
-        if (StringUtils.isEmpty(key) || value == null) {
+        if (key.equals("allServers")) {
+            filterMap.put(new FilterKey(key), null);
+            return this;
+        } else if (StringUtils.isEmpty(key) || value == null) {
             return this;
         }
 
         Object tmpValue = value;
 
         if (tmpValue instanceof Boolean)
-            tmpValue = (((Boolean) tmpValue).booleanValue()) ? "1" : "0";
+            tmpValue = ((Boolean) tmpValue) ? "1" : "0";
 
-        if (tmpValue != null) {
-            if ("and".equals(key) || "or".equals(key) || "nor".equals(key))
-                filter.append("\\").append(key);
-            else
-                filter.append("\\").append(key).append("\\").append(tmpValue);
+        if ("and".equals(key) || "or".equals(key) || "nor".equals(key)) {
+            filterMap.put(new FilterKey(key), null);
+        } else {
+            filterMap.put(new FilterKey(key), tmpValue);
         }
+
         return this;
     }
 
@@ -350,6 +420,31 @@ public final class MasterServerFilter {
      */
     @Override
     public String toString() {
-        return filter.toString();
+        StringBuilder buffer = new StringBuilder();
+
+        //Do we have allServers set?
+        if (filterMap.entrySet().stream().anyMatch(p -> p.getKey().key.equals("allServers"))) {
+            return "";
+        }
+
+        for (Map.Entry<FilterKey, Object> entry : filterMap.entrySet()) {
+            String key = entry.getKey().key;
+            Object value = entry.getValue();
+
+            if (value instanceof Boolean)
+                value = ((Boolean) value) ? "1" : "0";
+
+            if (entry.getKey().isSpecial()) {
+                buffer.append("\\").append(key);
+                if (value != null && !StringUtils.isBlank(value.toString())) {
+                    buffer.append("\\").append(value);
+                }
+            } else {
+                if (value == null)
+                    value = "";
+                buffer.append("\\").append(key).append("\\").append(value);
+            }
+        }
+        return buffer.toString();
     }
 }
