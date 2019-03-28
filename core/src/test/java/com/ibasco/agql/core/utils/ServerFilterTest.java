@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.ibasco.agql.protocols.valve.steam.master;
+package com.ibasco.agql.core.utils;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
@@ -34,26 +34,26 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-class MasterServerFilterTest {
+class ServerFilterTest {
 
-    private static final Logger log = LoggerFactory.getLogger(MasterServerFilterTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ServerFilterTest.class);
 
     @Test
     @DisplayName("Test filter keys inside a map")
     void testFilterKeysInsideMap() {
-        Map<MasterServerFilter.FilterKey, Object> filterMap = new HashMap<>();
-        filterMap.put(new MasterServerFilter.FilterKey("appId"), 550);
-        filterMap.put(new MasterServerFilter.FilterKey("napp"), null);
-        filterMap.put(new MasterServerFilter.FilterKey("napp"), null);
+        Map<ServerFilter.FilterKey, Object> filterMap = new HashMap<>();
+        filterMap.put(new ServerFilter.FilterKey("appId"), 550);
+        filterMap.put(new ServerFilter.FilterKey("napp"), null);
+        filterMap.put(new ServerFilter.FilterKey("napp"), null);
         assertEquals(3, filterMap.size());
-        assertTrue(filterMap.containsKey(new MasterServerFilter.FilterKey("appId")));
+        assertTrue(filterMap.containsKey(new ServerFilter.FilterKey("appId")));
     }
 
     @Test
     @DisplayName("Test equality for special keys")
     void testEqualityForSpecialKeys() {
-        MasterServerFilter.FilterKey key1 = new MasterServerFilter.FilterKey("nand");
-        MasterServerFilter.FilterKey key2 = new MasterServerFilter.FilterKey("nand");
+        ServerFilter.FilterKey key1 = new ServerFilter.FilterKey("nand");
+        ServerFilter.FilterKey key2 = new ServerFilter.FilterKey("nand");
 
         assertNotEquals(key1, key2);
         assertNotEquals(key1.id, key2.id);
@@ -67,9 +67,9 @@ class MasterServerFilterTest {
     @Test
     @DisplayName("Test equality for non-special keys")
     void testEqualityForNonSpecialKeys() {
-        MasterServerFilter.FilterKey key1 = new MasterServerFilter.FilterKey("full");
-        MasterServerFilter.FilterKey key2 = new MasterServerFilter.FilterKey("appId");
-        MasterServerFilter.FilterKey key3 = new MasterServerFilter.FilterKey("appId");
+        ServerFilter.FilterKey key1 = new ServerFilter.FilterKey("full");
+        ServerFilter.FilterKey key2 = new ServerFilter.FilterKey("appId");
+        ServerFilter.FilterKey key3 = new ServerFilter.FilterKey("appId");
 
         assertFalse(key1.isSpecial());
         assertFalse(key2.isSpecial());
@@ -87,7 +87,7 @@ class MasterServerFilterTest {
     @Test
     @DisplayName("Test duplicate filter entries for Non-Special keys")
     void testDuplicateFilterEntriesForNonSpecialKeys() {
-        MasterServerFilter filter = MasterServerFilter.create().appId(550).appId(730);
+        ServerFilter filter = ServerFilter.create().appId(550).appId(730);
 
         assertEquals("\\appId\\730", filter.toString());
 
@@ -109,7 +109,7 @@ class MasterServerFilterTest {
     @Test
     @DisplayName("Test duplicate filter entries for Special keys")
     void testDuplicateFilterEntriesForSpecialKeys() {
-        MasterServerFilter filter = MasterServerFilter.create()
+        ServerFilter filter = ServerFilter.create()
                 .appId(550)
                 .nor()
                 .dedicated(true)
@@ -128,7 +128,7 @@ class MasterServerFilterTest {
     @Test
     @DisplayName("Test null appId argument")
     void testNullAppId() {
-        MasterServerFilter filter = MasterServerFilter.create().appId(null);
+        ServerFilter filter = ServerFilter.create().appId(null);
         assertTrue(filter.toString().isEmpty());
         log.debug("Output #1 = {}", filter.toString());
     }
@@ -136,7 +136,7 @@ class MasterServerFilterTest {
     @Test
     @DisplayName("Test null argument for all boolean properties")
     void testNullBooleanProperties() {
-        MasterServerFilter filter = MasterServerFilter.create()
+        ServerFilter filter = ServerFilter.create()
                 .isWhitelisted(null)
                 .isEmpty(null)
                 .isFull(null)
@@ -153,7 +153,7 @@ class MasterServerFilterTest {
 
     @Test
     void testAllServersFilter() {
-        MasterServerFilter filter = MasterServerFilter.create()
+        ServerFilter filter = ServerFilter.create()
                 .appId(550)
                 .nor()
                 .dedicated(true)

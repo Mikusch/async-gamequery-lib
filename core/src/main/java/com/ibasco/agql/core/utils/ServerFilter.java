@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.ibasco.agql.protocols.valve.steam.master;
+package com.ibasco.agql.core.utils;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,11 +32,22 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * <p>A Master Server Filter Utility class</p>
+ * <p>Server Filter Utility class</p>
+ * <br>
+ * <h3>Example:</h3>
+ * <code>
+ * ServerFilter filter = ServerFilter.create().dedicated(true).appId(550);
+ * </code>
+ * <br >
+ * <br >
+ * <h3>Translates to:</h3>
+ * <code>\dedicated\1\appId\550</code>
+ * <br >
+ * <br >
  *
  * @author Rafael Ibasco
  */
-public final class MasterServerFilter {
+public final class ServerFilter {
 
     private static final String[] specialFilters = new String[] {"nand", "nor", "napp"};
 
@@ -85,20 +96,20 @@ public final class MasterServerFilter {
     }
 
     /**
-     * <p>A factory method to create a new {@link MasterServerFilter} instance</p>
+     * <p>A factory method to create a new {@link ServerFilter} instance</p>
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public static MasterServerFilter create() {
-        return new MasterServerFilter();
+    public static ServerFilter create() {
+        return new ServerFilter();
     }
 
     /**
      * A filter to return all available servers. Please note that applying this filter will override all previously defined filters of this instance.
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public MasterServerFilter allServers() {
+    public ServerFilter allServers() {
         return create("allServers", null);
     }
 
@@ -108,9 +119,9 @@ public final class MasterServerFilter {
      * @param value
      *         Set to True to filter spectator proxy servers
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public MasterServerFilter isSpecProxy(Boolean value) {
+    public ServerFilter isSpecProxy(Boolean value) {
 
         return create("proxy", value);
     }
@@ -121,9 +132,9 @@ public final class MasterServerFilter {
      * @param value
      *         Set to True to filter servers that are full
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public MasterServerFilter isFull(Boolean value) {
+    public ServerFilter isFull(Boolean value) {
 
         return create("full", value);
     }
@@ -134,9 +145,9 @@ public final class MasterServerFilter {
      * @param value
      *         Set to true to only filter servers that are empty
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public MasterServerFilter isEmpty(Boolean value) {
+    public ServerFilter isEmpty(Boolean value) {
 
         return create("empty", value);
     }
@@ -147,9 +158,9 @@ public final class MasterServerFilter {
      * @param value
      *         Set to true to only filter servers that are password protected
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public MasterServerFilter isPasswordProtected(Boolean value) {
+    public ServerFilter isPasswordProtected(Boolean value) {
 
         return create("password", value);
     }
@@ -160,9 +171,9 @@ public final class MasterServerFilter {
      * @param value
      *         Set to true to filter servers only running under linux
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public MasterServerFilter isLinuxServer(Boolean value) {
+    public ServerFilter isLinuxServer(Boolean value) {
 
         return create("linux", value);
     }
@@ -173,9 +184,9 @@ public final class MasterServerFilter {
      * @param value
      *         Map name
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public MasterServerFilter mapName(String value) {
+    public ServerFilter mapName(String value) {
         return create("map", value);
     }
 
@@ -185,9 +196,9 @@ public final class MasterServerFilter {
      * @param value
      *         The mode/game directory name (e.g. cstrike)
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public MasterServerFilter gamedir(String value) {
+    public ServerFilter gamedir(String value) {
         return create("gamedir", value);
     }
 
@@ -197,9 +208,9 @@ public final class MasterServerFilter {
      * @param value
      *         Set to true to filter only secure servers (VAC protected)
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public MasterServerFilter isSecure(Boolean value) {
+    public ServerFilter isSecure(Boolean value) {
 
         return create("secure", value);
     }
@@ -210,9 +221,9 @@ public final class MasterServerFilter {
      * @param value
      *         Set to true to filter only dedicated servers
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public MasterServerFilter dedicated(Boolean value) {
+    public ServerFilter dedicated(Boolean value) {
 
         return create("dedicated", value);
     }
@@ -221,9 +232,9 @@ public final class MasterServerFilter {
      * <p>A special filter, specifies that servers matching all of the following [x] conditions should not be
      * returned</p>
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public MasterServerFilter nand() {
+    public ServerFilter nand() {
         return create("nand", "");
     }
 
@@ -231,9 +242,9 @@ public final class MasterServerFilter {
      * <p>A special filter, specifies that servers matching any of the following [x] conditions should not be
      * returned</p>
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public MasterServerFilter nor() {
+    public ServerFilter nor() {
         return create("nor", "");
     }
 
@@ -244,9 +255,9 @@ public final class MasterServerFilter {
      * @param appId
      *         An integer representing the appId of a game
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public MasterServerFilter napp(Integer appId) {
+    public ServerFilter napp(Integer appId) {
         if (appId != null && appId > 0)
             return create("napp", appId);
         return this;
@@ -258,9 +269,9 @@ public final class MasterServerFilter {
      * @param value
      *         Set to true to filter only empty servers
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public MasterServerFilter hasNoPlayers(Boolean value) {
+    public ServerFilter hasNoPlayers(Boolean value) {
 
         return create("noplayers", value);
     }
@@ -271,9 +282,9 @@ public final class MasterServerFilter {
      * @param tags
      *         A {@link String} array of tags
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public MasterServerFilter gametypes(String... tags) {
+    public ServerFilter gametypes(String... tags) {
         return create("gametype", StringUtils.join(tags, ","));
     }
 
@@ -283,9 +294,9 @@ public final class MasterServerFilter {
      * @param tags
      *         Array of String game server tags
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public MasterServerFilter gamedata(String... tags) {
+    public ServerFilter gamedata(String... tags) {
         return create("gamedata", StringUtils.join(tags, ","));
     }
 
@@ -295,9 +306,9 @@ public final class MasterServerFilter {
      * @param tags
      *         Array of String game server tags
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public MasterServerFilter gamedataOr(String... tags) {
+    public ServerFilter gamedataOr(String... tags) {
         return create("gamedataor", StringUtils.join(tags, ","));
     }
 
@@ -307,9 +318,9 @@ public final class MasterServerFilter {
      * @param nameWildcard
      *         Hostname to lookup (can use * as a wildcard)
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public MasterServerFilter withHostName(String nameWildcard) {
+    public ServerFilter withHostName(String nameWildcard) {
         return create("name_match", nameWildcard);
     }
 
@@ -319,9 +330,9 @@ public final class MasterServerFilter {
      * @param version
      *         Version to search (can use * as a wildcard)
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public MasterServerFilter hasVersion(String version) {
+    public ServerFilter hasVersion(String version) {
         return create("version_match", version);
     }
 
@@ -331,9 +342,9 @@ public final class MasterServerFilter {
      * @param value
      *         Set to True to return only one server for each unique IP
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public MasterServerFilter onlyOneServerPerUniqueIp(Boolean value) {
+    public ServerFilter onlyOneServerPerUniqueIp(Boolean value) {
 
         return create("collapse_addr_hash", value);
     }
@@ -344,9 +355,9 @@ public final class MasterServerFilter {
      * @param ipPort
      *         IP[:port] format
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public MasterServerFilter hasServerIp(String ipPort) {
+    public ServerFilter hasServerIp(String ipPort) {
         return create("gameaddr", ipPort);
     }
 
@@ -356,9 +367,9 @@ public final class MasterServerFilter {
      * @param value
      *         Set to true to filter only whitelisted servers
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public MasterServerFilter isWhitelisted(Boolean value) {
+    public ServerFilter isWhitelisted(Boolean value) {
 
         return create("white", value);
     }
@@ -369,9 +380,9 @@ public final class MasterServerFilter {
      * @param appId
      *         An integer representing the appId of a game
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    public MasterServerFilter appId(Integer appId) {
+    public ServerFilter appId(Integer appId) {
         if (appId == null)
             return this;
         if (appId > 0)
@@ -387,9 +398,9 @@ public final class MasterServerFilter {
      * @param value
      *         A {@link String} representing the value associated with the key
      *
-     * @return Instance of {@link MasterServerFilter}
+     * @return Instance of {@link ServerFilter}
      */
-    private MasterServerFilter create(String key, Object value) {
+    private ServerFilter create(String key, Object value) {
         if (key.equals("allServers")) {
             filterMap.put(new FilterKey(key), null);
             return this;

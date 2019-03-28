@@ -56,6 +56,8 @@ public class SteamApiConstants {
     public static final String STEAM_ECON_ITEMS = "IEconItems_${appId}";
     public static final String STEAM_CHEATREPORT_SERVICE = "ICheatReportingService";
 
+    public static final String STEAM_GAMESSERVER_SERVICE = "IGameServersService";
+
     //Steam URL Params
     public static final String STEAM_URLPARAM_STEAMID = "steamid";
     public static final String STEAM_URLPARAM_APPID = "appid";
