@@ -60,9 +60,7 @@ public class SteamApps extends SteamWebApiInterface {
     public CompletableFuture<List<SteamApp>> getAppList() {
         final CompletableFuture<JsonObject> json = sendRequest(new GetAppList(VERSION_2));
         return json.thenApply((JsonObject element) -> {
-            JsonElement jsonApps = element.get("applist")
-                    .getAsJsonObject()
-                    .getAsJsonArray("apps");
+            JsonElement jsonApps = element.get("applist").getAsJsonObject().getAsJsonArray("apps");
             Type appListType = new TypeToken<List<SteamApp>>() {
             }.getType();
             return builder().fromJson(jsonApps, appListType);
@@ -77,7 +75,7 @@ public class SteamApps extends SteamWebApiInterface {
         final CompletableFuture<JsonObject> json = sendRequest(new GetServersAtAddress(1, address.getHostAddress()));
         return json.thenApply(root -> {
             JsonObject response = root.getAsJsonObject("response");
-            Boolean success = response.getAsJsonPrimitive("success").getAsBoolean();
+            boolean success = response.getAsJsonPrimitive("success").getAsBoolean();
             JsonArray serverList = response.getAsJsonArray("servers");
             if (success) {
                 Type serverListType = new TypeToken<List<SteamGameServer>>() {
