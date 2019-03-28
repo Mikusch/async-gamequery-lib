@@ -51,6 +51,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -66,7 +67,8 @@ public class SourceQueryClient extends AbstractGameServerClient<SourceServerRequ
     private static final Logger log = LoggerFactory.getLogger(SourceQueryClient.class);
     private static final int MAX_CHALLENGE_CACHE_SIZE = 32000;
     private final ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("cache-pool-%d").setDaemon(true).build();
-    private final ListeningExecutorService executorService = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(64, threadFactory));
+
+    private final ListeningExecutorService executorService = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() + 1, threadFactory));
     private LoadingCache<InetSocketAddress, Integer> challengeCache;
     private int maxCacheSize = MAX_CHALLENGE_CACHE_SIZE;
     private Duration cacheExpiration = Duration.ofMinutes(15);
@@ -322,8 +324,8 @@ public class SourceQueryClient extends AbstractGameServerClient<SourceServerRequ
                     .maximumSize(maxCacheSize)
                     .expireAfterWrite(cacheExpiration.toMillis(), TimeUnit.MILLISECONDS)
                     .refreshAfterWrite(cacheRefreshInterval.toMillis(), TimeUnit.MILLISECONDS)
-                    .recordStats()
-                    .build(new CacheLoader<InetSocketAddress, Integer>() {
+                    //.recordStats()
+                    .build(new CacheLoader<>() {
                         @Override
                         public Integer load(InetSocketAddress key) throws Exception {
                             return getServerChallenge(SourceChallengeType.ANY, key).get();
@@ -332,7 +334,55 @@ public class SourceQueryClient extends AbstractGameServerClient<SourceServerRequ
                         @Override
                         public ListenableFuture<Integer> reload(InetSocketAddress key, Integer oldValue) throws Exception {
                             log.debug("Refreshing challenge number for : {}, Old Value = {}", key, oldValue);
-                            return executorService.submit(() -> load(key));
+
+                            final CompletableFuture<Integer> cf = getServerChallenge(SourceChallengeType.ANY, key);
+
+                            //noinspection NullableProblems
+                            return new ListenableFuture<>() {
+                                private Map<Runnable, Executor> listeners = new HashMap<>();
+
+                                {
+                                    cf.whenComplete((integer, ex) -> {
+                                        if (ex != null) {
+
+                                            return;
+                                        }
+                                        for (Map.Entry<Runnable, Executor> e : listeners.entrySet()) {
+                                            e.getValue().execute(e.getKey());
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void addListener(Runnable listener, Executor executor) {
+                                    listeners.put(listener, executor);
+                                }
+
+                                @Override
+                                public boolean cancel(boolean mayInterruptIfRunning) {
+                                    return cf.cancel(mayInterruptIfRunning);
+                                }
+
+                                @Override
+                                public boolean isCancelled() {
+                                    return cf.isCancelled();
+                                }
+
+                                @Override
+                                public boolean isDone() {
+                                    return cf.isDone();
+                                }
+
+                                @Override
+                                public Integer get() throws InterruptedException, ExecutionException {
+                                    return cf.get();
+                                }
+
+                                @Override
+                                public Integer get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+                                    return cf.get(timeout, unit);
+                                }
+                            };//executorService.submit(() -> load(key));
                         }
                     });
         }
