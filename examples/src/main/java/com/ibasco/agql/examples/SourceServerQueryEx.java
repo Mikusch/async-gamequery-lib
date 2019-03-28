@@ -25,12 +25,12 @@
 package com.ibasco.agql.examples;
 
 import com.ibasco.agql.core.utils.ConcurrentUtils;
+import com.ibasco.agql.core.utils.ServerFilter;
 import com.ibasco.agql.examples.base.BaseExample;
 import com.ibasco.agql.protocols.valve.source.query.client.SourceQueryClient;
 import com.ibasco.agql.protocols.valve.source.query.enums.SourceChallengeType;
 import com.ibasco.agql.protocols.valve.source.query.pojos.SourcePlayer;
 import com.ibasco.agql.protocols.valve.source.query.pojos.SourceServer;
-import com.ibasco.agql.protocols.valve.steam.master.MasterServerFilter;
 import com.ibasco.agql.protocols.valve.steam.master.client.MasterServerQueryClient;
 import com.ibasco.agql.protocols.valve.steam.master.enums.MasterServerRegion;
 import com.ibasco.agql.protocols.valve.steam.master.enums.MasterServerType;
@@ -64,7 +64,7 @@ public class SourceServerQueryEx extends BaseExample {
         Boolean passwordProtected = promptInputBool("List only passwd protected servers? (y/n)", false, null, "srcQryPassProtect");
         Boolean dedicatedServers = promptInputBool("List only dedicated servers (y/n)", false, "y", "srcQryDedicated");
 
-        MasterServerFilter filter = MasterServerFilter.create()
+        ServerFilter filter = ServerFilter.create()
                 .dedicated(dedicatedServers)
                 .isPasswordProtected(passwordProtected)
                 .allServers()
@@ -81,7 +81,7 @@ public class SourceServerQueryEx extends BaseExample {
         log.info("Test Completed  in {} minutes", end);
     }
 
-    private Map<String, Double> queryAllServers(MasterServerFilter filter) {
+    private Map<String, Double> queryAllServers(ServerFilter filter) {
 
         final Map<String, Double> resultMap = new HashMap<>();
 

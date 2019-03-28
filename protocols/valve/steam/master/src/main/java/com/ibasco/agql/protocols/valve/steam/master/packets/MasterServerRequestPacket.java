@@ -24,7 +24,7 @@
 
 package com.ibasco.agql.protocols.valve.steam.master.packets;
 
-import com.ibasco.agql.protocols.valve.steam.master.MasterServerFilter;
+import com.ibasco.agql.core.utils.ServerFilter;
 import com.ibasco.agql.protocols.valve.steam.master.MasterServerPacket;
 import com.ibasco.agql.protocols.valve.steam.master.enums.MasterServerRegion;
 import io.netty.buffer.ByteBuf;
@@ -45,7 +45,7 @@ public class MasterServerRequestPacket extends MasterServerPacket {
 
     private byte region;
 
-    private MasterServerFilter filter;
+    private ServerFilter filter;
 
     private String startIp;
 
@@ -53,11 +53,11 @@ public class MasterServerRequestPacket extends MasterServerPacket {
 
     }
 
-    public MasterServerRequestPacket(MasterServerRegion region, MasterServerFilter filter, InetSocketAddress startIp) {
+    public MasterServerRequestPacket(MasterServerRegion region, ServerFilter filter, InetSocketAddress startIp) {
         this(region, filter, new StringBuilder().append(startIp.getAddress().getHostAddress()).append(":").append(startIp.getPort()).toString());
     }
 
-    public MasterServerRequestPacket(MasterServerRegion region, MasterServerFilter filter, String startIp) {
+    public MasterServerRequestPacket(MasterServerRegion region, ServerFilter filter, String startIp) {
         setHeader(MASTER_SERVER_REQUEST_HEADER);
         this.region = region.getHeader();
         this.filter = filter;
@@ -72,11 +72,11 @@ public class MasterServerRequestPacket extends MasterServerPacket {
         this.region = region;
     }
 
-    public MasterServerFilter getFilter() {
+    public ServerFilter getFilter() {
         return filter;
     }
 
-    public void setFilter(MasterServerFilter filter) {
+    public void setFilter(ServerFilter filter) {
         this.filter = filter;
     }
 

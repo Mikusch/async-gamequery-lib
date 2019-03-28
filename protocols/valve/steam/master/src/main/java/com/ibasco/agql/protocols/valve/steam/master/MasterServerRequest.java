@@ -25,6 +25,7 @@
 package com.ibasco.agql.protocols.valve.steam.master;
 
 import com.ibasco.agql.core.AbstractGameServerRequest;
+import com.ibasco.agql.core.utils.ServerFilter;
 import com.ibasco.agql.protocols.valve.steam.master.enums.MasterServerRegion;
 import com.ibasco.agql.protocols.valve.steam.master.packets.MasterServerRequestPacket;
 
@@ -36,10 +37,11 @@ import java.net.InetSocketAddress;
 public class MasterServerRequest<T> extends AbstractGameServerRequest<MasterServerRequestPacket> {
 
     private MasterServerRegion region;
-    private MasterServerFilter filter;
+
+    private ServerFilter filter;
     private InetSocketAddress startIp;
 
-    public MasterServerRequest(InetSocketAddress recipient, MasterServerRegion region, MasterServerFilter filter, InetSocketAddress startIp) {
+    public MasterServerRequest(InetSocketAddress recipient, MasterServerRegion region, ServerFilter filter, InetSocketAddress startIp) {
         super(recipient);
         this.region = region;
         this.filter = filter;

@@ -24,8 +24,8 @@
 
 package com.ibasco.agql.examples;
 
+import com.ibasco.agql.core.utils.ServerFilter;
 import com.ibasco.agql.examples.base.BaseExample;
-import com.ibasco.agql.protocols.valve.steam.master.MasterServerFilter;
 import com.ibasco.agql.protocols.valve.steam.master.client.MasterServerQueryClient;
 import com.ibasco.agql.protocols.valve.steam.master.enums.MasterServerRegion;
 import com.ibasco.agql.protocols.valve.steam.master.enums.MasterServerType;
@@ -59,7 +59,7 @@ public class MasterServerQueryEx extends BaseExample {
     public void listAllServers() {
         int appId = Integer.valueOf(promptInput("Please enter an App ID (optional): ", false, "-1"));
 
-        MasterServerFilter filter = MasterServerFilter.create().dedicated(true).isEmpty(false);
+        ServerFilter filter = ServerFilter.create().dedicated(true).isEmpty(false);
 
         if (appId > 0)
             filter.appId(appId);
