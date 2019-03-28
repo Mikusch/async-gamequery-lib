@@ -18,6 +18,16 @@ Project Resources
 * [Continuous Integration](https://travis-ci.org/ribasco/async-gamequery-lib)
 * [Snapshot Builds](https://oss.sonatype.org/content/repositories/snapshots/com/ibasco/agql/)
 
+Releases
+-------------
+
+1.0.0
+
+* Moved MasterServerFilter to core package and renamed to ServerFilter
+* Added new webapi implementation for interface IGameServersService
+* All primitive types have been replaced by reference types in pojos
+* Fixed consistency of id property types
+
 Discussion Platforms
 -----------------
 
