@@ -30,14 +30,20 @@ import org.asynchttpclient.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.ExecutorService;
+
 /**
  * An API Client for Clash of Clans
  */
 public class CocWebApiClient extends AbstractRestClient<CocWebApiRequest, CocWebApiResponse> {
     private static final Logger log = LoggerFactory.getLogger(CocWebApiClient.class);
 
-    public CocWebApiClient(String apiToken) {
-        super(apiToken);
+    public CocWebApiClient(String authToken) {
+        this(authToken, null);
+    }
+
+    public CocWebApiClient(String authToken, ExecutorService executorService) {
+        super(authToken, executorService);
     }
 
     @Override

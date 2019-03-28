@@ -31,27 +31,28 @@ import com.ibasco.agql.core.messenger.WebMessenger;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 
 /**
  * A generic Http Client base
  *
- * @param <Req> Type of {@link AbstractWebRequest}
- * @param <Res> Type of {@link AbstractWebResponse}
+ * @param <R> Type of {@link AbstractWebRequest}
+ * @param <S> Type of {@link AbstractWebResponse}
  */
-abstract class AbstractWebClient<Req extends AbstractWebRequest, Res extends AbstractWebResponse>
-        implements Client<Req, Res> {
+abstract class AbstractWebClient<R extends AbstractWebRequest, S extends AbstractWebResponse>
+        implements Client<R, S> {
 
-    private WebMessenger<Req, Res> messenger;
+    private WebMessenger<R, S> messenger;
 
-    AbstractWebClient() {
-        this.messenger = createWebMessenger();
+    AbstractWebClient(ExecutorService executorService) {
+        this.messenger = createWebMessenger(executorService);
     }
 
-    abstract public WebMessenger<Req, Res> createWebMessenger();
+    abstract public WebMessenger<R, S> createWebMessenger(ExecutorService executorService);
 
     @Override
     @SuppressWarnings("unchecked")
-    public <V> CompletableFuture<V> sendRequest(Req message) {
+    public <V> CompletableFuture<V> sendRequest(R message) {
         return (CompletableFuture<V>) messenger.send(message);
     }
 

@@ -30,18 +30,25 @@ import org.asynchttpclient.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.ExecutorService;
+
 public class SteamWebApiClient extends AbstractRestClient<SteamWebApiRequest, SteamWebApiResponse> {
+
     private static final Logger log = LoggerFactory.getLogger(SteamWebApiClient.class);
 
     /**
      * Some requests do not require a token
      */
     public SteamWebApiClient() {
-        super("");
+        this(null);
     }
 
     public SteamWebApiClient(String apiToken) {
-        super(apiToken);
+        this(apiToken, null);
+    }
+
+    public SteamWebApiClient(String apiToken, ExecutorService executorService) {
+        super(apiToken, executorService);
     }
 
     /**

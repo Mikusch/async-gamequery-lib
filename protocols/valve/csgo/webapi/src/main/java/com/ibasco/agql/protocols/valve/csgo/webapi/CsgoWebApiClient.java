@@ -28,10 +28,20 @@ import com.ibasco.agql.protocols.valve.steam.webapi.SteamWebApiClient;
 import com.ibasco.agql.protocols.valve.steam.webapi.SteamWebApiResponse;
 import org.asynchttpclient.Response;
 
+import java.util.concurrent.ExecutorService;
+
 public class CsgoWebApiClient extends SteamWebApiClient {
 
+    public CsgoWebApiClient() {
+        this(null);
+    }
+
     public CsgoWebApiClient(String apiToken) {
-        super(apiToken);
+        this(apiToken, null);
+    }
+
+    public CsgoWebApiClient(String apiToken, ExecutorService executorService) {
+        super(apiToken, executorService);
     }
 
     @Override

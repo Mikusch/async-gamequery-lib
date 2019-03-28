@@ -28,10 +28,20 @@ import com.ibasco.agql.protocols.valve.steam.webapi.SteamWebApiClient;
 import com.ibasco.agql.protocols.valve.steam.webapi.SteamWebApiResponse;
 import org.asynchttpclient.Response;
 
+import java.util.concurrent.ExecutorService;
+
 public class Dota2WebApiClient extends SteamWebApiClient {
 
+    public Dota2WebApiClient() {
+        this(null);
+    }
+
     public Dota2WebApiClient(String apiToken) {
-        super(apiToken);
+        this(apiToken, null);
+    }
+
+    public Dota2WebApiClient(String apiToken, ExecutorService executorService) {
+        super(apiToken, executorService);
     }
 
     @Override

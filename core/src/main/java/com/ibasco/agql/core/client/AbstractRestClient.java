@@ -39,28 +39,33 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Function;
 
-abstract public class AbstractRestClient<Req extends AbstractWebApiRequest, Res extends AbstractWebApiResponse>
-        extends AbstractWebClient<Req, Res> {
+abstract public class AbstractRestClient<R extends AbstractWebApiRequest, S extends AbstractWebApiResponse>
+        extends AbstractWebClient<R, S> {
+
     private static final Logger log = LoggerFactory.getLogger(AbstractRestClient.class);
 
     private Map<String, ContentTypeProcessor> contentProcessorMap = new HashMap<>();
+
     private String authToken;
 
     /**
      * Some rest clients do not require authentication
      */
     public AbstractRestClient() {
-        this(null);
+        this(null, null);
     }
 
     /**
      * Constructor accepting a {@link String} representing the authentication token for the provider
      *
-     * @param authToken A {@link String} containing the authentication token for the provider
+     * @param authToken
+     *         A {@link String} containing the authentication token for the provider
      */
-    public AbstractRestClient(String authToken) {
+    public AbstractRestClient(String authToken, ExecutorService executorService) {
+        super(executorService);
         this.authToken = authToken;
         //Register default content-type processors
         registerContentTypeProcessor("application/json", new JsonContentTypeProcessor());
@@ -73,9 +78,9 @@ abstract public class AbstractRestClient<Req extends AbstractWebApiRequest, Res 
      * @return A {@link WebMessenger} instance
      */
     @Override
-    public final WebMessenger<Req, Res> createWebMessenger() {
-        Function<Response, Res> responseFactory = this::createWebApiResponse;
-        return new WebMessenger<>(responseFactory.andThen(this::applyContentTypeProcessor));
+    public final WebMessenger<R, S> createWebMessenger(ExecutorService executorService) {
+        Function<Response, S> responseFactory = this::createWebApiResponse;
+        return new WebMessenger<>(responseFactory.andThen(this::applyContentTypeProcessor), executorService);
     }
 
     /**
@@ -85,7 +90,7 @@ abstract public class AbstractRestClient<Req extends AbstractWebApiRequest, Res 
      *
      * @return Returns instance of {@link AbstractWebApiResponse}
      */
-    private Res applyContentTypeProcessor(Res response) {
+    private S applyContentTypeProcessor(S response) {
         if (response != null && response.getMessage() != null) {
             Response msg = response.getMessage();
             String body = msg.getResponseBody();
@@ -100,8 +105,10 @@ abstract public class AbstractRestClient<Req extends AbstractWebApiRequest, Res 
     /**
      * <p>Register custom content processors based on the value defined in the Content-Type header</p>
      *
-     * @param contentType A {@link String} Content-Type identifier
-     * @param processor   The {@link ContentTypeProcessor} that will handle the response body conversion
+     * @param contentType
+     *         A {@link String} Content-Type identifier
+     * @param processor
+     *         The {@link ContentTypeProcessor} that will handle the response body conversion
      */
     protected void registerContentTypeProcessor(String contentType, ContentTypeProcessor processor) {
         String type = parseContentType(contentType);
@@ -116,7 +123,8 @@ abstract public class AbstractRestClient<Req extends AbstractWebApiRequest, Res 
     /**
      * <p>A Simply utility method for parsing Content-Type which contains parameters</p>
      *
-     * @param contentType A {@link String} containing the Content-Type
+     * @param contentType
+     *         A {@link String} containing the Content-Type
      *
      * @return The parsed content-type {@link String} excluding the parameters
      */
@@ -130,7 +138,7 @@ abstract public class AbstractRestClient<Req extends AbstractWebApiRequest, Res 
     }
 
     @Override
-    public <V> CompletableFuture<V> sendRequest(Req message) {
+    public <V> CompletableFuture<V> sendRequest(R message) {
         //Before sending the request, make sure we make some last minute
         // modifications to the request by applying the api token provided
         if (!StringUtils.isEmpty(this.authToken))
@@ -142,8 +150,10 @@ abstract public class AbstractRestClient<Req extends AbstractWebApiRequest, Res 
     /**
      * <p>Override this method if the client requires authentication.</p>
      *
-     * @param requestBuilder The {@link RequestBuilder} containing the request parameters of the concrete {@link org.asynchttpclient.Request}
-     * @param authToken      A {@link String} representing the authetntication token to be passed to the provider
+     * @param requestBuilder
+     *         The {@link RequestBuilder} containing the request parameters of the concrete {@link org.asynchttpclient.Request}
+     * @param authToken
+     *         A {@link String} representing the authetntication token to be passed to the provider
      */
     protected void applyAuthenticationScheme(RequestBuilder requestBuilder, String authToken) {
         //Optional implementation
@@ -152,13 +162,14 @@ abstract public class AbstractRestClient<Req extends AbstractWebApiRequest, Res 
     /**
      * <p>A factory method that creates an {@link AbstractWebApiResponse} instance based on the Http {@link Response}</p>
      *
-     * @param response The Http {@link Response} received by the transport
+     * @param response
+     *         The Http {@link Response} received by the transport
      *
      * @return A Concrete implementation of {@link AbstractWebApiResponse}
      */
     //TODO: This needs to be re-factored. The web Messenger should be the one to manufacture the responses FOR the client.
     // TODO: (Cont) The client ONLY needs to pass in the request/response mapping definitions to the messenger
-    abstract protected Res createWebApiResponse(Response response);
+    abstract protected S createWebApiResponse(Response response);
 
     public String getAuthToken() {
         return authToken;

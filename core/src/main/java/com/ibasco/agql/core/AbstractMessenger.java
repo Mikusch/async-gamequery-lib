@@ -109,7 +109,7 @@ abstract public class AbstractMessenger<A extends AbstractRequest, B extends Abs
         }
     }
 
-    protected ExecutorService getExecutorService() {
+    public ExecutorService getExecutorService() {
         return executorService;
     }
 
@@ -356,7 +356,7 @@ abstract public class AbstractMessenger<A extends AbstractRequest, B extends Abs
     /**
      * Returns the number of remaining requests in the session
      *
-     * @return A {@link Collection} of {@link java.util.Map.Entry}<{@link SessionId},{@link SessionValue}>
+     * @return A {@link Collection} of session entries
      */
     public Collection<Map.Entry<SessionId, SessionValue<A, B>>> getRemaining() {
         return sessionManager.getSessionEntries();
@@ -371,7 +371,10 @@ abstract public class AbstractMessenger<A extends AbstractRequest, B extends Abs
     @Override
     public void close() throws IOException {
         if (!requestQueue.isEmpty()) {
-            log.warn("Request queue is not yet empty");
+            log.warn("Request queue is not yet empty (Total: {})", requestQueue.size());
+            for (RequestDetails details : requestQueue) {
+                log.warn("\tRequest: {}", details);
+            }
         }
         if (!messengerService.isTerminated())
             processRequests.set(false);
