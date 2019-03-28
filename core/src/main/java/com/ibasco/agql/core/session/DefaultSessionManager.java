@@ -43,16 +43,18 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class DefaultSessionManager<Req extends AbstractRequest,
-        Res extends AbstractResponse>
-        implements SessionManager<Req, Res> {
+public class DefaultSessionManager<R extends AbstractRequest,
+        S extends AbstractResponse>
+        implements SessionManager<R, S> {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultSessionManager.class);
     private static final int DEFAULT_READ_TIMEOUT = 5;
     private HashedWheelTimer sessionTimer;
     private AbstractSessionIdFactory factory;
-    private final Multimap<SessionId, SessionValue<Req, Res>> session = Multimaps.synchronizedSortedSetMultimap(TreeMultimap.create(new SessionIdComparator(), new SessionValueComparator()));
-    private Map<Class<? extends Req>, Class<? extends Res>> directory = null;
+
+    private final Multimap<SessionId, SessionValue<R, S>> session = Multimaps.synchronizedSortedSetMultimap(TreeMultimap.create(new SessionIdComparator(), new SessionValueComparator()));
+
+    private Map<Class<? extends R>, Class<? extends S>> directory;
     private final AtomicLong indexCounter = new AtomicLong();
 
     @SuppressWarnings("unchecked")
@@ -64,7 +66,7 @@ public class DefaultSessionManager<Req extends AbstractRequest,
     }
 
     @Override
-    public SessionValue<Req, Res> getSession(AbstractMessage message) {
+    public SessionValue<R, S> getSession(AbstractMessage message) {
         final SessionId id = getId(message);
         log.debug("Retrieving Session for {}", id);
         if (id != null)
@@ -73,8 +75,8 @@ public class DefaultSessionManager<Req extends AbstractRequest,
     }
 
     @Override
-    public SessionValue<Req, Res> getSession(SessionId id) {
-        final Collection<SessionValue<Req, Res>> c = session.get(id);
+    public SessionValue<R, S> getSession(SessionId id) {
+        final Collection<SessionValue<R, S>> c = session.get(id);
         synchronized (this) {
             return (id != null && c.size() > 0) ? c.iterator().next() : null;
         }
@@ -101,11 +103,11 @@ public class DefaultSessionManager<Req extends AbstractRequest,
     }
 
     @Override
-    public SessionId register(RequestDetails<Req, Res> requestDetails) {
+    public SessionId register(RequestDetails<R, S> requestDetails) {
         final SessionId id = factory.createId(requestDetails.getRequest());
         log.debug("Registering session with id '{}'", id);
         //Create our session store object and set it's properties
-        SessionValue<Req, Res> sessionValue = new SessionValue<>(id, requestDetails, indexCounter.incrementAndGet());
+        SessionValue<R, S> sessionValue = new SessionValue<>(id, requestDetails, indexCounter.incrementAndGet());
         sessionValue.setExpectedResponse(findResponseClass(requestDetails.getRequest()));
         sessionValue.setTimeout(sessionTimer.newTimeout(new ReadRequestTimeoutTimerTask(id, this), DEFAULT_READ_TIMEOUT, TimeUnit.SECONDS));
         //Add to the registry
@@ -144,17 +146,17 @@ public class DefaultSessionManager<Req extends AbstractRequest,
     }
 
     @Override
-    public synchronized Collection<Map.Entry<SessionId, SessionValue<Req, Res>>> getSessionEntries() {
+    public synchronized Collection<Map.Entry<SessionId, SessionValue<R, S>>> getSessionEntries() {
         return session.entries();
     }
 
     @Override
-    public Class<? extends Res> findResponseClass(Req request) {
+    public Class<? extends S> findResponseClass(R request) {
         return directory.get(request.getClass());
     }
 
     @Override
-    public Map<Class<? extends Req>, Class<? extends Res>> getLookupMap() {
+    public Map<Class<? extends R>, Class<? extends S>> getLookupMap() {
         return directory;
     }
 
