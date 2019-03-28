@@ -52,6 +52,15 @@ public class EncryptUtils {
     }
 
     /**
+     * Encrypt plain text with the provided secret key
+     *
+     * @param plainText
+     *         Text to encrypt
+     * @param secretKey
+     *         Secret key
+     *
+     * @return The encrypted text
+     *
      * @see <a href="https://gist.github.com/bricef/2436364">https://gist.github.com/bricef/2436364</a>
      */
     public static String encrypt(String plainText, String secretKey) {
@@ -67,12 +76,28 @@ public class EncryptUtils {
         }
     }
 
+    /**
+     * Decrypts the cipher text
+     *
+     * @param cipherText
+     *         The text to be decrupted
+     *
+     * @return The decrypted string
+     */
     public static String decrypt(String cipherText) {
         return decrypt(cipherText, worldsMostSecureUnhackableKey);
     }
 
+
     /**
-     * @see <a href="https://gist.github.com/bricef/2436364">https://gist.github.com/bricef/2436364</a>
+     * Decryopts the cipher text
+     *
+     * @param cipherText
+     *         The cipher text to be decrypted
+     * @param secretKey
+     *         The secret key to be used for decryption
+     *
+     * @return The decrupted string
      */
     public static String decrypt(String cipherText, String secretKey) {
         try {

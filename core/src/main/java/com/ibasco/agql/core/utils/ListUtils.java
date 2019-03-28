@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 public class ListUtils {
     /**
-     * <p>Convert the internal type of the List to another type (e.g. From List<String> to List<Integer>)</p>
+     * <p>Convert the internal type of the List to another type (e.g. From {@literal List<String>} to {@literal List<Integer>)}</p>
      *
      * @param from The {@link List} to convert
      * @param func The {@link Function} that will perform the conversion
