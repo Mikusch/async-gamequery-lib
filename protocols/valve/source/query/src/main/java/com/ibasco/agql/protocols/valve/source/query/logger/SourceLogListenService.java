@@ -102,27 +102,30 @@ public class SourceLogListenService implements Closeable {
         bootstrap = new Bootstrap()
                 .localAddress(this.listenAddress)
                 .channel(NioDatagramChannel.class)
-                .group(listenWorkGroup)
-                .handler(new ChannelInitializer<NioDatagramChannel>() {
-                    @Override
-                    protected void initChannel(NioDatagramChannel ch) throws Exception {
-                        ch.pipeline().addLast(new SourceLogListenHandler(logEventCallback));
-                    }
-                });
+                .group(listenWorkGroup);
+        addNewHandler(logEventCallback);
 
         SourceLogListenService service = this;
         //Add shutdown hook
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                try {
-                    log.debug("Service Interrupted. Shutting down gracefully.");
-                    service.shutdown();
-                } catch (InterruptedException e) {
-                    log.error(e.getMessage(), e);
-                }
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                log.debug("Service Interrupted. Shutting down gracefully.");
+                service.shutdown();
+            } catch (InterruptedException e) {
+                log.error(e.getMessage(), e);
             }
-        });
+        }));
+    }
+
+    private void addNewHandler(Consumer<SourceLogEntry> logEventCallback) {
+        if (logEventCallback != null) {
+            bootstrap.handler(new ChannelInitializer<NioDatagramChannel>() {
+                @Override
+                protected void initChannel(NioDatagramChannel ch) {
+                    ch.pipeline().addLast(new SourceLogListenHandler(logEventCallback));
+                }
+            });
+        }
     }
 
     /**
@@ -142,6 +145,7 @@ public class SourceLogListenService implements Closeable {
      */
     public void setLogEventCallback(Consumer<SourceLogEntry> logEventCallback) {
         this.logEventCallback = logEventCallback;
+        addNewHandler(logEventCallback);
     }
 
     public InetSocketAddress getListenAddress() {
