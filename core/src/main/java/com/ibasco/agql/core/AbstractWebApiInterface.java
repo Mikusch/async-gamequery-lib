@@ -41,15 +41,21 @@ import java.util.concurrent.CompletableFuture;
 /**
  * <p>An API Interface containing a set/group of methods that are usually defined by the publisher</p>
  *
- * @param <T>   Any class extending {@link AbstractRestClient}
- * @param <Req> Any class extending {@link AbstractWebRequest}
+ * @param <T>
+ *         Any class extending {@link AbstractRestClient}
+ * @param <R>
+ *         Any class extending {@link AbstractWebRequest}
  */
 abstract public class AbstractWebApiInterface<T extends AbstractRestClient,
-        Req extends AbstractWebApiRequest,
-        Res extends AbstractWebApiResponse<JsonElement>> {
+        R extends AbstractWebApiRequest,
+        S extends AbstractWebApiResponse<JsonElement>> {
+
     private static final Logger log = LoggerFactory.getLogger(AbstractWebApiInterface.class);
+
     private T client;
+
     private GsonBuilder gsonBuilder = new GsonBuilder();
+
     private Gson jsonBuilder;
 
     /**
@@ -60,7 +66,8 @@ abstract public class AbstractWebApiInterface<T extends AbstractRestClient,
     /**
      * <p>Default Constructor</p>
      *
-     * @param client A {@link AbstractRestClient} instance
+     * @param client
+     *         A {@link AbstractRestClient} instance
      */
     public AbstractWebApiInterface(T client) {
         this.client = client;
@@ -90,12 +97,17 @@ abstract public class AbstractWebApiInterface<T extends AbstractRestClient,
     /**
      * <p>Similar to {@link #asCollectionOf(Class, String, JsonObject, Class, boolean)}  minus the Collection class argument. This also returns a {@link List} collection type instead.</p>
      *
-     * @param itemType      The {@link Class} type of the item in the {@link Collection}
-     * @param searchKey     The name of the {@link JsonArray} element that we will convert
-     * @param searchElement The {@link JsonObject} that will be used to search for the {@link JsonArray} element
-     * @param strict        If <code>true</code> an exception will be thrown if the listName is not found within the search element specified.
-     *                      Otherwise no exceptions will be raised and an empty {@link Collection} instance will be returned.
-     * @param <A>           The type of the List to be returned
+     * @param itemType
+     *         The {@link Class} type of the item in the {@link Collection}
+     * @param searchKey
+     *         The name of the {@link JsonArray} element that we will convert
+     * @param searchElement
+     *         The {@link JsonObject} that will be used to search for the {@link JsonArray} element
+     * @param strict
+     *         If <code>true</code> an exception will be thrown if the listName is not found within the search element specified.
+     *         Otherwise no exceptions will be raised and an empty {@link Collection} instance will be returned.
+     * @param <A>
+     *         The type of the List to be returned
      *
      * @return A {@link List} containing the parsed json entities
      */
@@ -106,12 +118,18 @@ abstract public class AbstractWebApiInterface<T extends AbstractRestClient,
     /**
      * <p>A Utility function that retrieves the specified json element and converts it to a Parameterized {@link java.util.Collection} instance.</p>
      *
-     * @param itemType        The {@link Class} type of the item in the {@link Collection}
-     * @param searchKey       The name of the {@link JsonArray} element that we will convert
-     * @param searchElement   The {@link JsonObject} that will be used to search for the {@link JsonArray} element
-     * @param collectionClass A {@link Class} representing the concrete implementation of the {@link Collection}
-     * @param strict          If <code>true</code> an exception will be thrown if the listName is not found within the search element specified. Otherwise no exceptions will be raised and an empty {@link Collection} instance will be returned.
-     * @param <A>             The internal type of the {@link Collection} to be returned
+     * @param itemType
+     *         The {@link Class} type of the item in the {@link Collection}
+     * @param searchKey
+     *         The name of the {@link JsonArray} element that we will convert
+     * @param searchElement
+     *         The {@link JsonObject} that will be used to search for the {@link JsonArray} element
+     * @param collectionClass
+     *         A {@link Class} representing the concrete implementation of the {@link Collection}
+     * @param strict
+     *         If <code>true</code> an exception will be thrown if the listName is not found within the search element specified. Otherwise no exceptions will be raised and an empty {@link Collection} instance will be returned.
+     * @param <A>
+     *         The internal type of the {@link Collection} to be returned
      *
      * @return A {@link Collection} containing the type specified by collectionClass argument
      */
@@ -129,21 +147,24 @@ abstract public class AbstractWebApiInterface<T extends AbstractRestClient,
     /**
      * <p>Sends a requests to the internal client.</p>
      *
-     * @param request An instance of {@link AbstractWebRequest}
-     * @param <A>     The return type
+     * @param request
+     *         An instance of {@link AbstractWebRequest}
+     * @param <A>
+     *         The return type
      *
      * @return A {@link CompletableFuture} that will hold the expected value once a response has been received by the server
      */
     @SuppressWarnings("unchecked")
-    protected <A> CompletableFuture<A> sendRequest(Req request) {
-        CompletableFuture<Res> responseFuture = client.sendRequest(request);
+    protected <A> CompletableFuture<A> sendRequest(R request) {
+        CompletableFuture<S> responseFuture = client.sendRequest(request);
         return responseFuture.whenComplete(this::interceptResponse).thenApply(this::postProcessConversion);
     }
 
     /**
      * <p>Override this method if you need to perform additional configurations against the builder (e.g. Register custom deserializers)</p>
      *
-     * @param builder A {@link GsonBuilder} instance that will be accessed and configured by a concrete {@link AbstractWebApiInterface} implementation
+     * @param builder
+     *         A {@link GsonBuilder} instance that will be accessed and configured by a concrete {@link AbstractWebApiInterface} implementation
      */
     protected void configureBuilder(GsonBuilder builder) {
         //no implementation
@@ -152,12 +173,15 @@ abstract public class AbstractWebApiInterface<T extends AbstractRestClient,
     /**
      * The default error handler. Override this if needed.
      *
-     * @param response An instance of {@link AbstractWebApiResponse} or <code>null</code> if an exception was thrown.
-     * @param error    A {@link Throwable} instance or <code>null</code> if no error has occured.
+     * @param response
+     *         An instance of {@link AbstractWebApiResponse} or <code>null</code> if an exception was thrown.
+     * @param error
+     *         A {@link Throwable} instance or <code>null</code> if no error has occured.
      *
-     * @throws WebException thrown if a server/client error occurs
+     * @throws WebException
+     *         thrown if a server/client error occurs
      */
-    protected void interceptResponse(Res response, Throwable error) {
+    protected void interceptResponse(S response, Throwable error) {
         if (error != null)
             throw new WebException(error);
         log.debug("Handling response for {}, with status code = {}", response.getMessage().getUri(), response.getMessage().getStatusCode());
@@ -186,7 +210,7 @@ abstract public class AbstractWebApiInterface<T extends AbstractRestClient,
      * Converts the underlying processed content to a {@link com.google.gson.JsonObject} instance
      */
     @SuppressWarnings("unchecked")
-    private <A> A postProcessConversion(Res response) {
+    private <A> A postProcessConversion(S response) {
         log.debug("ConvertToJson for Response = {}, {}", response.getMessage().getStatusCode(), response.getMessage().getHeaders());
         JsonElement processedElement = response.getProcessedContent();
         if (processedElement != null) {
