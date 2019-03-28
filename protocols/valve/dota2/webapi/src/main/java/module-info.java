@@ -8,4 +8,5 @@ module agql.dota2.webapi {
     requires agql.steam.webapi;
     requires slf4j.api;
     requires agql.lib.core;
+    requires async.http.client;
 }

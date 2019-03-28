@@ -27,4 +27,5 @@ module agql.lib.core {
     requires com.google.common;
     requires io.netty.codec;
     requires org.apache.commons.text;
+    requires guava.retrying;
 }

@@ -12,4 +12,5 @@ module agql.source.query {
     requires io.netty.buffer;
     requires io.netty.common;
     requires io.netty.codec;
+    requires com.google.common;
 }

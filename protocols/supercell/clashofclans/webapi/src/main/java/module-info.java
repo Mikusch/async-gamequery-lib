@@ -8,5 +8,6 @@ module agql.coc.webapi {
     requires io.netty.codec.http;
     requires slf4j.api;
     requires org.apache.commons.lang3;
+    requires async.http.client;
     opens com.ibasco.agql.protocols.supercell.coc.webapi.pojos;
 }
