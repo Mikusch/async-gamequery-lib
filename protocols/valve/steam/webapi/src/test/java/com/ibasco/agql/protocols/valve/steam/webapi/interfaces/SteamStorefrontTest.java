@@ -26,22 +26,25 @@ package com.ibasco.agql.protocols.valve.steam.webapi.interfaces;
 
 import com.ibasco.agql.protocols.valve.steam.webapi.SteamWebApiClient;
 import com.ibasco.agql.protocols.valve.steam.webapi.pojos.StoreAppDetails;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Properties;
 
-public class SteamStorefrontIT {
+public class SteamStorefrontTest {
 
     private SteamWebApiClient apiClient;
 
     private SteamStorefront storeFront;
 
-    public SteamStorefrontIT() throws IOException, URISyntaxException {
+    public SteamStorefrontTest() throws IOException, URISyntaxException {
         Properties testProps = new Properties();
-        testProps.load(getClass().getClassLoader().getResource("test.properties").openStream());
+        URL res = getClass().getClassLoader().getResource("test.properties");
+        if (res != null)
+            testProps.load(res.openStream());
         apiClient = new SteamWebApiClient(testProps.getProperty("web.token"));
         storeFront = new SteamStorefront(apiClient);
     }
