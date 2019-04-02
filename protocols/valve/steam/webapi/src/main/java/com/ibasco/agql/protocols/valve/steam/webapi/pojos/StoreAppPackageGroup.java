@@ -38,7 +38,7 @@ public class StoreAppPackageGroup {
     @SerializedName("save_text")
     private String saveText;
     @SerializedName("display_type")
-    private int displayType;
+    private String displayType;
     @SerializedName("is_recurring_subscription")
     private String recurringSubscription;
     @SerializedName("subs")
@@ -84,11 +84,11 @@ public class StoreAppPackageGroup {
         this.saveText = saveText;
     }
 
-    public int getDisplayType() {
+    public String getDisplayType() {
         return displayType;
     }
 
-    public void setDisplayType(int displayType) {
+    public void setDisplayType(String displayType) {
         this.displayType = displayType;
     }
 
