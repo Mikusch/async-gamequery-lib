@@ -189,19 +189,19 @@ abstract public class AbstractWebApiInterface<T extends AbstractRestClient,
                 response.getStatus() == HttpStatusClass.CLIENT_ERROR) {
             switch (response.getMessage().getStatusCode()) {
                 case 400:
-                    throw new BadRequestException("Incorrect parameters provided for request");
+                    throw new BadRequestException("Incorrect parameters provided for request", response.getMessage());
                 case 403:
-                    throw new AccessDeniedException("Access denied, either because of missing/incorrect credentials or used API token does not grant access to the requested resource.");
+                    throw new AccessDeniedException("Access denied, either because of missing/incorrect credentials or used API token does not grant access to the requested resource.", response.getMessage());
                 case 404:
-                    throw new ResourceNotFoundException("Resource was not found.");
+                    throw new ResourceNotFoundException("Resource was not found.", response.getMessage());
                 case 429:
-                    throw new TooManyRequestsException("Request was throttled, because amount of requests was above the threshold defined for the used API token.");
+                    throw new TooManyRequestsException("Request was throttled, because amount of requests was above the threshold defined for the used API token.", response.getMessage());
                 case 500:
-                    throw new UnknownWebException("An internal error occured in server");
+                    throw new UnknownWebException("An internal error occured in server", response.getMessage());
                 case 503:
-                    throw new ServiceUnavailableException("Service is temprorarily unavailable. Possible maintenance on-going.");
+                    throw new ServiceUnavailableException("Service is temprorarily unavailable. Possible maintenance on-going.", response.getMessage());
                 default:
-                    throw new WebException("Unknown error occured on request send");
+                    throw new WebException(String.format("Unknown response received from server (Status Code: %d)", response.getMessage().getStatusCode()), response.getMessage());
             }
         }
     }

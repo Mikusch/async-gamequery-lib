@@ -24,6 +24,8 @@
 
 package com.ibasco.agql.core.exceptions;
 
+import org.asynchttpclient.Response;
+
 public class ServiceUnavailableException extends WebException {
     public ServiceUnavailableException() {
         super();
@@ -35,6 +37,10 @@ public class ServiceUnavailableException extends WebException {
 
     public ServiceUnavailableException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public ServiceUnavailableException(String message, Response response) {
+        super(message, response);
     }
 
     public ServiceUnavailableException(Throwable cause) {

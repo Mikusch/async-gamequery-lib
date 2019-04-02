@@ -24,13 +24,23 @@
 
 package com.ibasco.agql.core.exceptions;
 
+import org.asynchttpclient.Response;
+
 public class WebException extends AsyncGameLibUncheckedException {
+
+    private Response response;
+
     public WebException() {
         super();
     }
 
     public WebException(String message) {
         super(message);
+    }
+
+    public WebException(String message, Response response) {
+        super(message);
+        this.response = response;
     }
 
     public WebException(String message, Throwable cause) {
@@ -43,5 +53,9 @@ public class WebException extends AsyncGameLibUncheckedException {
 
     public WebException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
+    }
+
+    public Response getResponse() {
+        return response;
     }
 }

@@ -24,7 +24,10 @@
 
 package com.ibasco.agql.core.exceptions;
 
+import org.asynchttpclient.Response;
+
 public class TooManyRequestsException extends WebException {
+
     public TooManyRequestsException() {
         super();
     }
@@ -35,6 +38,10 @@ public class TooManyRequestsException extends WebException {
 
     public TooManyRequestsException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public TooManyRequestsException(String message, Response response) {
+        super(message, response);
     }
 
     public TooManyRequestsException(Throwable cause) {

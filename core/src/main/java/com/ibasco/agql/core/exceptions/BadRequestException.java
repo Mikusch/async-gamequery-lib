@@ -24,13 +24,20 @@
 
 package com.ibasco.agql.core.exceptions;
 
+import org.asynchttpclient.Response;
+
 public class BadRequestException extends WebException {
+
     public BadRequestException() {
         super();
     }
 
     public BadRequestException(String message) {
         super(message);
+    }
+
+    public BadRequestException(String message, Response response) {
+        super(message, response);
     }
 
     public BadRequestException(String message, Throwable cause) {

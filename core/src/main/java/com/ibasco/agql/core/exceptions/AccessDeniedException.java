@@ -24,7 +24,10 @@
 
 package com.ibasco.agql.core.exceptions;
 
+import org.asynchttpclient.Response;
+
 public class AccessDeniedException extends WebException {
+
     public AccessDeniedException() {
         super();
     }
@@ -35,6 +38,10 @@ public class AccessDeniedException extends WebException {
 
     public AccessDeniedException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public AccessDeniedException(String message, Response response) {
+        super(message, response);
     }
 
     public AccessDeniedException(Throwable cause) {

@@ -24,7 +24,10 @@
 
 package com.ibasco.agql.core.exceptions;
 
+import org.asynchttpclient.Response;
+
 public class ResourceNotFoundException extends WebException {
+
     public ResourceNotFoundException() {
         super();
     }
@@ -35,6 +38,10 @@ public class ResourceNotFoundException extends WebException {
 
     public ResourceNotFoundException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public ResourceNotFoundException(String message, Response response) {
+        super(message, response);
     }
 
     public ResourceNotFoundException(Throwable cause) {

@@ -24,7 +24,10 @@
 
 package com.ibasco.agql.core.exceptions;
 
+import org.asynchttpclient.Response;
+
 public class UnknownWebException extends WebException {
+
     public UnknownWebException() {
         super();
     }
@@ -35,6 +38,10 @@ public class UnknownWebException extends WebException {
 
     public UnknownWebException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public UnknownWebException(String message, Response response) {
+        super(message, response);
     }
 
     public UnknownWebException(Throwable cause) {
