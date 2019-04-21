@@ -71,7 +71,7 @@ public interface SessionManager<R extends AbstractRequest, S extends AbstractRes
      *
      * @return A {@link SessionId} if the request has been successfully registered.
      */
-    SessionId register(RequestDetails<R, S> requestDetails);
+    SessionId create(RequestDetails<R, S> requestDetails);
 
     /**
      * Removes the associated session from the registry (if available) using a {@link SessionId} instance.
@@ -82,7 +82,7 @@ public interface SessionManager<R extends AbstractRequest, S extends AbstractRes
      *
      * @return <code>true</code> if the operation has been successful.
      */
-    boolean unregister(SessionId id);
+    boolean delete(SessionId id);
 
     /**
      * Removes the associated session from the registry (if available) using the {@link SessionValue} provided.
@@ -91,7 +91,7 @@ public interface SessionManager<R extends AbstractRequest, S extends AbstractRes
      *
      * @return <code>true</code> if the operation has been successful.
      */
-    boolean unregister(SessionValue value);
+    boolean delete(SessionValue value);
 
     /**
      * This lookups the session registry map and indicates whether or not the message is in the registry or not

@@ -179,6 +179,8 @@ abstract public class AbstractMessenger<A extends AbstractRequest, B extends Abs
                 if (session != null) {
                     final CompletableFuture<B> clientPromise = session.getClientPromise();
                     clientPromise.completeExceptionally(ex);
+                } else {
+                    log.debug("Session not found for response: {}", response);
                 }
             }
             return;
@@ -227,7 +229,7 @@ abstract public class AbstractMessenger<A extends AbstractRequest, B extends Abs
                 requestDetails.setStatus(RequestStatus.ACCEPTED);
 
                 //Register the request to the session manager
-                final SessionId id = sessionManager.register(requestDetails);
+                final SessionId id = sessionManager.create(requestDetails);
 
                 //Update the status to registered
                 requestDetails.setStatus(RequestStatus.REGISTERED);
@@ -286,7 +288,7 @@ abstract public class AbstractMessenger<A extends AbstractRequest, B extends Abs
                 requestDetails.setStatus(RequestStatus.ACCEPTED);
 
                 //Register the session immediately, duplicate requests will be queued in the order they are sent.
-                final SessionId id = sessionManager.register(requestDetails);
+                final SessionId id = sessionManager.create(requestDetails);
 
                 //Perform session cleanup operations on completion
                 requestDetails.getClientPromise().whenComplete((response, throwable) -> performSessionCleanup(id));
@@ -323,7 +325,7 @@ abstract public class AbstractMessenger<A extends AbstractRequest, B extends Abs
     private void performSessionCleanup(SessionId id) {
         final SessionValue session = sessionManager.getSession(id);
         if (session != null) {
-            sessionManager.unregister(session);
+            sessionManager.delete(session);
         }
     }
 

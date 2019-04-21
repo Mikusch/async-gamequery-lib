@@ -48,13 +48,17 @@ public class DefaultSessionManager<R extends AbstractRequest,
         implements SessionManager<R, S> {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultSessionManager.class);
+
     private static final int DEFAULT_READ_TIMEOUT = 5;
+
     private HashedWheelTimer sessionTimer;
+
     private AbstractSessionIdFactory factory;
 
     private final Multimap<SessionId, SessionValue<R, S>> session = Multimaps.synchronizedSortedSetMultimap(TreeMultimap.create(new SessionIdComparator(), new SessionValueComparator()));
 
     private Map<Class<? extends R>, Class<? extends S>> directory;
+
     private final AtomicLong indexCounter = new AtomicLong();
 
     @SuppressWarnings("unchecked")
@@ -77,9 +81,7 @@ public class DefaultSessionManager<R extends AbstractRequest,
     @Override
     public SessionValue<R, S> getSession(SessionId id) {
         final Collection<SessionValue<R, S>> c = session.get(id);
-        synchronized (this) {
-            return (id != null && c.size() > 0) ? c.iterator().next() : null;
-        }
+        return (id != null && c.size() > 0) ? c.iterator().next() : null;
     }
 
     @Override
@@ -87,23 +89,20 @@ public class DefaultSessionManager<R extends AbstractRequest,
         if (factory == null)
             throw new IllegalStateException("No id factory assigned");
         final SessionId id = factory.createId(message);
-        synchronized (this) {
-            log.debug("Checking if the Session Id is registered (id : {})", id);
-            if (!session.containsKey(id)) {
-                log.debug("Did not find session id '{}' in the map", id);
-                session.entries().forEach(e -> log.debug(" # {} = {}", e.getKey(), e.getValue()));
-                return null;
-            }
-
-            return session.keySet().stream()
-                    .filter(sessionId -> sessionId.equals(id))
-                    .findFirst()
-                    .orElse(null);
+        log.debug("Checking if the Session Id is registered (id : {})", id);
+        if (!session.containsKey(id)) {
+            log.debug("Did not find session id '{}' in the map", id);
+            session.entries().forEach(e -> log.debug(" # {} = {}", e.getKey(), e.getValue()));
+            return null;
         }
+        return session.keySet().stream()
+                .filter(sessionId -> sessionId.equals(id))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
-    public SessionId register(RequestDetails<R, S> requestDetails) {
+    public SessionId create(RequestDetails<R, S> requestDetails) {
         final SessionId id = factory.createId(requestDetails.getRequest());
         log.debug("Registering session with id '{}'", id);
         //Create our session store object and set it's properties
@@ -111,33 +110,29 @@ public class DefaultSessionManager<R extends AbstractRequest,
         sessionValue.setExpectedResponse(findResponseClass(requestDetails.getRequest()));
         sessionValue.setTimeout(sessionTimer.newTimeout(new ReadRequestTimeoutTimerTask(id, this), DEFAULT_READ_TIMEOUT, TimeUnit.SECONDS));
         //Add to the registry
-        synchronized (this) {
-            if (session.put(id, sessionValue)) {
-                log.debug("Session ID '{}' successfully registered", id);
-                requestDetails.setStatus(RequestStatus.REGISTERED);
-            } else {
-                log.warn("Cancelled timeout for '{}' since the registration failed", id);
-                sessionValue.getTimeout().cancel();
-            }
+        if (session.put(id, sessionValue)) {
+            log.debug("Session ID '{}' successfully registered", id);
+            requestDetails.setStatus(RequestStatus.REGISTERED);
+        } else {
+            log.warn("Cancelled timeout for '{}' since the registration failed", id);
+            sessionValue.getTimeout().cancel();
         }
         return id;
     }
 
     @Override
-    public boolean unregister(SessionId id) {
-        return unregister(getSession(id));
+    public boolean delete(SessionId id) {
+        return delete(getSession(id));
     }
 
     @Override
-    public boolean unregister(SessionValue sessionValue) {
+    public boolean delete(SessionValue sessionValue) {
         log.debug("Unregistering session {}", sessionValue.getId());
-        synchronized (this) {
-            //Cancel the timeout instance
-            if (sessionValue.getTimeout() != null) {
-                sessionValue.getTimeout().cancel();
-            }
-            return session.remove(sessionValue.getId(), sessionValue);
+        //Cancel the timeout instance
+        if (sessionValue.getTimeout() != null) {
+            sessionValue.getTimeout().cancel();
         }
+        return session.remove(sessionValue.getId(), sessionValue);
     }
 
     @Override
@@ -146,7 +141,7 @@ public class DefaultSessionManager<R extends AbstractRequest,
     }
 
     @Override
-    public synchronized Collection<Map.Entry<SessionId, SessionValue<R, S>>> getSessionEntries() {
+    public Collection<Map.Entry<SessionId, SessionValue<R, S>>> getSessionEntries() {
         return session.entries();
     }
 
@@ -169,13 +164,14 @@ public class DefaultSessionManager<R extends AbstractRequest,
     public void close() throws IOException {
         if (getSessionEntries().size() > 0) {
             log.debug("Request to shutdown has been initiated but the session manager still contains " +
-                    "pending entries that has not completed.");
+                              "pending entries that has not completed.");
         }
         sessionTimer.stop();
         session.clear();
     }
 
     private static class SessionIdComparator implements Comparator<SessionId> {
+
         @Override
         public int compare(SessionId o1, SessionId o2) {
             return new CompareToBuilder()
@@ -185,6 +181,7 @@ public class DefaultSessionManager<R extends AbstractRequest,
     }
 
     private static class SessionValueComparator implements Comparator<SessionValue> {
+
         @Override
         public int compare(SessionValue o1, SessionValue o2) {
             return new CompareToBuilder()

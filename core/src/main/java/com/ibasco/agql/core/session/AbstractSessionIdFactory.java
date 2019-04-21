@@ -71,6 +71,10 @@ abstract public class AbstractSessionIdFactory<
             address = message.sender();
         }
 
+        if (address == null) {
+            throw new IllegalStateException("Unable to resolve address for message: " + message);
+        }
+
         return String.format(DEFAULT_ID_FORMAT,
                 messageClass.getSimpleName(),
                 address.getAddress().getHostAddress(),

@@ -27,6 +27,7 @@ package com.ibasco.agql.core.exceptions;
 import com.google.gson.JsonObject;
 
 public class JsonElementNotFoundException extends JsonOperationException {
+
     public JsonElementNotFoundException(JsonObject jsonObject) {
         super(jsonObject);
     }
@@ -41,9 +42,5 @@ public class JsonElementNotFoundException extends JsonOperationException {
 
     public JsonElementNotFoundException(JsonObject jsonObject, String message, Throwable cause) {
         super(jsonObject, message, cause);
-    }
-
-    public JsonElementNotFoundException(JsonObject jsonObject, String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(jsonObject, message, cause, enableSuppression, writableStackTrace);
     }
 }

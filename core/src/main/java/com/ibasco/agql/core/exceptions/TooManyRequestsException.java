@@ -24,31 +24,15 @@
 
 package com.ibasco.agql.core.exceptions;
 
-import org.asynchttpclient.Response;
+import com.ibasco.agql.core.AbstractWebApiResponse;
 
 public class TooManyRequestsException extends WebException {
-
-    public TooManyRequestsException() {
-        super();
-    }
-
-    public TooManyRequestsException(String message) {
-        super(message);
-    }
 
     public TooManyRequestsException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public TooManyRequestsException(String message, Response response) {
+    public TooManyRequestsException(String message, AbstractWebApiResponse response) {
         super(message, response);
-    }
-
-    public TooManyRequestsException(Throwable cause) {
-        super(cause);
-    }
-
-    public TooManyRequestsException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

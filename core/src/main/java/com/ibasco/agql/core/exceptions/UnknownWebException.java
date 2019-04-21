@@ -24,31 +24,15 @@
 
 package com.ibasco.agql.core.exceptions;
 
-import org.asynchttpclient.Response;
+import com.ibasco.agql.core.AbstractWebApiResponse;
 
 public class UnknownWebException extends WebException {
-
-    public UnknownWebException() {
-        super();
-    }
-
-    public UnknownWebException(String message) {
-        super(message);
-    }
 
     public UnknownWebException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public UnknownWebException(String message, Response response) {
+    public UnknownWebException(String message, AbstractWebApiResponse response) {
         super(message, response);
-    }
-
-    public UnknownWebException(Throwable cause) {
-        super(cause);
-    }
-
-    public UnknownWebException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

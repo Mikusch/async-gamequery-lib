@@ -24,38 +24,41 @@
 
 package com.ibasco.agql.core.exceptions;
 
-import org.asynchttpclient.Response;
+import com.ibasco.agql.core.AbstractWebApiResponse;
 
 public class WebException extends AsyncGameLibUncheckedException {
 
-    private Response response;
-
-    public WebException() {
-        super();
-    }
+    private AbstractWebApiResponse response;
 
     public WebException(String message) {
         super(message);
-    }
-
-    public WebException(String message, Response response) {
-        super(message);
-        this.response = response;
-    }
-
-    public WebException(String message, Throwable cause) {
-        super(message, cause);
     }
 
     public WebException(Throwable cause) {
         super(cause);
     }
 
-    public WebException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public WebException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public Response getResponse() {
+    public WebException(String message, AbstractWebApiResponse response) {
+        super(formatErrMsg(message, response));
+        this.response = response;
+    }
+
+    public WebException(Throwable cause, AbstractWebApiResponse response) {
+        super(cause);
+        this.response = response;
+    }
+
+    public AbstractWebApiResponse getResponse() {
         return response;
+    }
+
+    private static String formatErrMsg(String msg, AbstractWebApiResponse response) {
+        if (response == null)
+            return msg;
+        return String.format("%s (Status Code: %d, Uri: %s)", msg, response.getMessage().getStatusCode(), response.getMessage().getUri().toUrl());
     }
 }

@@ -24,26 +24,20 @@
 
 package com.ibasco.agql.protocols.supercell.coc.webapi.exceptions;
 
+import com.ibasco.agql.core.AbstractWebApiResponse;
 import com.ibasco.agql.core.exceptions.WebException;
 
 public class CocWebApiException extends WebException {
-    public CocWebApiException() {
-        super();
-    }
 
-    public CocWebApiException(String message) {
-        super(message);
+    public CocWebApiException(Throwable cause) {
+        super(cause);
     }
 
     public CocWebApiException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public CocWebApiException(Throwable cause) {
-        super(cause);
-    }
-
-    public CocWebApiException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public CocWebApiException(String message, AbstractWebApiResponse response) {
+        super(message, response);
     }
 }

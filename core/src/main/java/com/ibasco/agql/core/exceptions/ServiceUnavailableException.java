@@ -24,30 +24,15 @@
 
 package com.ibasco.agql.core.exceptions;
 
-import org.asynchttpclient.Response;
+import com.ibasco.agql.core.AbstractWebApiResponse;
 
 public class ServiceUnavailableException extends WebException {
-    public ServiceUnavailableException() {
-        super();
-    }
-
-    public ServiceUnavailableException(String message) {
-        super(message);
-    }
 
     public ServiceUnavailableException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public ServiceUnavailableException(String message, Response response) {
+    public ServiceUnavailableException(String message, AbstractWebApiResponse response) {
         super(message, response);
-    }
-
-    public ServiceUnavailableException(Throwable cause) {
-        super(cause);
-    }
-
-    public ServiceUnavailableException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

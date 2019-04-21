@@ -43,19 +43,11 @@ public class JsonOperationException extends WebException {
     }
 
     public JsonOperationException(JsonObject jsonObject, String message, Throwable cause) {
-        this(jsonObject, message, cause, false, false);
-    }
-
-    public JsonOperationException(JsonObject jsonObject, String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+        super(message, cause);
         this.jsonObject = jsonObject;
     }
 
     public JsonObject getJsonObject() {
         return jsonObject;
-    }
-
-    public void setJsonObject(JsonObject jsonObject) {
-        this.jsonObject = jsonObject;
     }
 }

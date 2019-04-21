@@ -24,31 +24,27 @@
 
 package com.ibasco.agql.core.exceptions;
 
-import org.asynchttpclient.Response;
+import com.ibasco.agql.core.AbstractWebApiResponse;
 
 public class BadRequestException extends WebException {
 
-    public BadRequestException() {
-        super();
-    }
-
     public BadRequestException(String message) {
         super(message);
-    }
-
-    public BadRequestException(String message, Response response) {
-        super(message, response);
-    }
-
-    public BadRequestException(String message, Throwable cause) {
-        super(message, cause);
     }
 
     public BadRequestException(Throwable cause) {
         super(cause);
     }
 
-    public BadRequestException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public BadRequestException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public BadRequestException(String message, AbstractWebApiResponse response) {
+        super(message, response);
+    }
+
+    public BadRequestException(Throwable cause, AbstractWebApiResponse response) {
+        super(cause, response);
     }
 }

@@ -183,25 +183,25 @@ abstract public class AbstractWebApiInterface<T extends AbstractRestClient,
      */
     protected void interceptResponse(S response, Throwable error) {
         if (error != null)
-            throw new WebException(error);
+            throw new WebException(error, response);
         log.debug("Handling response for {}, with status code = {}", response.getMessage().getUri(), response.getMessage().getStatusCode());
         if (response.getStatus() == HttpStatusClass.SERVER_ERROR ||
                 response.getStatus() == HttpStatusClass.CLIENT_ERROR) {
             switch (response.getMessage().getStatusCode()) {
                 case 400:
-                    throw new BadRequestException("Incorrect parameters provided for request", response.getMessage());
+                    throw new BadRequestException("Incorrect parameters provided for request", response);
                 case 403:
-                    throw new AccessDeniedException("Access denied, either because of missing/incorrect credentials or used API token does not grant access to the requested resource.", response.getMessage());
+                    throw new AccessDeniedException("Access denied, either because of missing/incorrect credentials or used API token does not grant access to the requested resource.", response);
                 case 404:
-                    throw new ResourceNotFoundException("Resource was not found.", response.getMessage());
+                    throw new ResourceNotFoundException("Resource was not found.", response);
                 case 429:
-                    throw new TooManyRequestsException("Request was throttled, because amount of requests was above the threshold defined for the used API token.", response.getMessage());
+                    throw new TooManyRequestsException("Request was throttled, because amount of requests was above the threshold defined for the used API token.", response);
                 case 500:
-                    throw new UnknownWebException("An internal error occured in server", response.getMessage());
+                    throw new UnknownWebException("An internal error occured in server", response);
                 case 503:
-                    throw new ServiceUnavailableException("Service is temprorarily unavailable. Possible maintenance on-going.", response.getMessage());
+                    throw new ServiceUnavailableException("Service is temprorarily unavailable. Possible maintenance on-going.", response);
                 default:
-                    throw new WebException(String.format("Unknown response received from server (Status Code: %d)", response.getMessage().getStatusCode()), response.getMessage());
+                    throw new WebException("Unknown response received from server", response);
             }
         }
     }
