@@ -8,8 +8,6 @@ Asynchronous Game Query Library
  
 A high-performance java game query library designed for steam/source based games. It's built on top of [Netty](https://github.com/netty/netty) as it's core transport engine and use [AsyncHttpClient](https://github.com/AsyncHttpClient/async-http-client) for web services.
 
-![Supported Games](site/resources/images/agql-project-banner-big.png "Games supported by Source Query Protocol")
-
 Project Resources
 -------------
 
