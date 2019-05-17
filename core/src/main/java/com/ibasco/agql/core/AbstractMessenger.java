@@ -30,7 +30,6 @@ import com.ibasco.agql.core.enums.RequestPriority;
 import com.ibasco.agql.core.enums.RequestStatus;
 import com.ibasco.agql.core.exceptions.ResponseException;
 import com.ibasco.agql.core.session.*;
-import com.ibasco.agql.core.utils.ConcurrentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,15 +55,23 @@ abstract public class AbstractMessenger<A extends AbstractRequest, B extends Abs
     private static final Logger log = LoggerFactory.getLogger(AbstractMessenger.class);
 
     public static final RequestPriority DEFAULT_REQUEST_PRIORITY = RequestPriority.MEDIUM;
-    private static final int DEFAULT_REQUEST_QUEUE_CAPACITY = 50;
+
+    private static final int DEFAULT_REQUEST_QUEUE_CAPACITY = 30;
+
     private final AtomicBoolean processRequests = new AtomicBoolean(false);
+
     private ScheduledExecutorService messengerService;
 
     private SessionManager<A, B> sessionManager;
+
     private Transport<A> transport;
-    private PriorityBlockingQueue<RequestDetails<A, B>> requestQueue;
-    private Consumer<PriorityBlockingQueue<RequestDetails<A, B>>> requestProcessor;
+
+    private BlockingDeque<RequestDetails<A, B>> requestQueue;
+
+    private Consumer<RequestDetails<A, B>> requestProcessor;
+
     private ProcessingMode processingMode;
+
     private ExecutorService executorService;
 
     public AbstractMessenger(ProcessingMode processingMode) {
@@ -87,8 +94,9 @@ abstract public class AbstractMessenger<A extends AbstractRequest, B extends Abs
 
         //Use the default session manager if not specified
         this.executorService = executorService;
+        //noinspection unchecked
         this.sessionManager = (sessionManager != null) ? sessionManager : new DefaultSessionManager<>(new DefaultSessionIdFactory());
-        this.requestQueue = new PriorityBlockingQueue<>(initQueueCapacity, new RequestComparator());
+        this.requestQueue = new LinkedBlockingDeque<>(initQueueCapacity); // new RequestComparator()
         this.transport = createTransportService();
         configureMappings(this.sessionManager.getLookupMap());
         this.messengerService = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("messenger-%d").build());
@@ -99,13 +107,19 @@ abstract public class AbstractMessenger<A extends AbstractRequest, B extends Abs
      * Call to start processing requests
      */
     private void start() {
-        if (!processRequests.get() && !messengerService.isShutdown()) {
-            processRequests.set(true);
-            messengerService.scheduleAtFixedRate(() -> {
-                if (processRequests.get()) {
-                    requestProcessor.accept(requestQueue);
+        if (!messengerService.isShutdown() && !processRequests.getAndSet(true)) {
+            messengerService.execute(() -> {
+                try {
+                    while (processRequests.get()) {
+                        requestProcessor.accept(requestQueue.take());
+                        Thread.sleep(1);
+                    }
+                } catch (InterruptedException e) {
+                    log.debug("Loop thread interrupted", e);
+                } finally {
+                    processRequests.set(false);
                 }
-            }, 0, 10, TimeUnit.NANOSECONDS);
+            });
         }
     }
 
@@ -154,8 +168,12 @@ abstract public class AbstractMessenger<A extends AbstractRequest, B extends Abs
     public CompletableFuture<B> send(A request, RequestPriority priority) {
         log.debug("Adding request '{}' to queue", request.getClass().getSimpleName());
         CompletableFuture<B> promise = new CompletableFuture<>();
-        requestQueue.add(new RequestDetails<>(request, promise, priority, this.transport));
-        start(); //start if not yet started
+        try {
+            requestQueue.put(new RequestDetails<>(request, promise, priority, this.transport));
+            start(); //start if not yet started
+        } catch (InterruptedException e) {
+            promise.completeExceptionally(e);
+        }
         return promise;
     }
 
@@ -204,20 +222,17 @@ abstract public class AbstractMessenger<A extends AbstractRequest, B extends Abs
     }
 
     /**
-     * A Function that process requests synchronously
-     *
-     * @param requestQueue
-     *         A {@link PriorityBlockingQueue} containing {@link RequestDetails}
+     * Process requests synchronously
      */
-    private void processSync(PriorityBlockingQueue<RequestDetails<A, B>> requestQueue) {
+    private void processSync(final RequestDetails<A, B> requestDetails) {
         //Since we are processing synchronously, we will not remove the head of the queue immediately but rather
         //only remove the head once it completes
-        final RequestDetails<A, B> requestDetails = requestQueue.peek();
+        //final RequestDetails<A, B> requestDetails = requestQueue.peek();
 
         try {
             //Do we have any requests to process?
             if (requestDetails == null) {
-                ConcurrentUtils.sleepUninterrupted(50);
+                //ConcurrentUtils.sleepUninterrupted(50);
                 return;
             }
 
@@ -264,25 +279,24 @@ abstract public class AbstractMessenger<A extends AbstractRequest, B extends Abs
                         });
                     }
                 });
+            } else {
+                requestQueue.putLast(requestDetails);
             }
         } catch (Exception e) {
-            if (requestDetails != null && requestDetails.getClientPromise() != null)
+            if (requestDetails.getClientPromise() != null)
                 requestDetails.getClientPromise().completeExceptionally(e);
         }
     }
 
     /**
-     * A Function that process requests asynchronously
-     *
-     * @param requestQueue
-     *         A {@link PriorityBlockingQueue} containing {@link RequestDetails}
+     * Process requests asynchronously
      */
-    private void processAsync(PriorityBlockingQueue<RequestDetails<A, B>> requestQueue) {
+    private void processAsync(final RequestDetails<A, B> requestDetails) {
         //Remove the head of the queue immediately and process accordingly
-        final RequestDetails<A, B> requestDetails = requestQueue.poll();
+        //final RequestDetails<A, B> requestDetails = requestQueue.take();
 
         //Only process new requests
-        if (requestDetails != null && requestDetails.getStatus() == RequestStatus.NEW) {
+        if (requestDetails.getStatus() == RequestStatus.NEW) {
             try {
                 //Set status to ACCEPTED
                 requestDetails.setStatus(RequestStatus.ACCEPTED);
@@ -332,9 +346,9 @@ abstract public class AbstractMessenger<A extends AbstractRequest, B extends Abs
     /**
      * Retrieve the internal request queue
      *
-     * @return A {@link PriorityBlockingQueue} instance
+     * @return The {@link BlockingDeque} of this messenger
      */
-    public PriorityBlockingQueue<RequestDetails<A, B>> getRequestQueue() {
+    public BlockingDeque<RequestDetails<A, B>> getRequestQueue() {
         return requestQueue;
     }
 
@@ -394,6 +408,7 @@ abstract public class AbstractMessenger<A extends AbstractRequest, B extends Abs
      * Comparator class to be used by our priority queue for the natural ordering of requests
      */
     private static class RequestComparator implements Comparator<RequestDetails> {
+
         @Override
         public int compare(RequestDetails o1, RequestDetails o2) {
             return o2.getPriority().compareTo(o1.getPriority());
