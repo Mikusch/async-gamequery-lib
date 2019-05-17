@@ -27,7 +27,6 @@ package com.ibasco.agql.protocols.valve.source.query;
 import com.ibasco.agql.core.Transport;
 import com.ibasco.agql.core.enums.ChannelType;
 import com.ibasco.agql.core.enums.ProcessingMode;
-import com.ibasco.agql.core.enums.RequestPriority;
 import com.ibasco.agql.core.exceptions.MessengerException;
 import com.ibasco.agql.core.messenger.GameServerMessenger;
 import com.ibasco.agql.core.transport.tcp.NettyPooledTcpTransport;
@@ -51,14 +50,14 @@ public class SourceRconMessenger extends GameServerMessenger<SourceRconRequest, 
 
     private Map<Integer, SourceRconRequestType> requestTypeMap = new LinkedHashMap<>();
 
-    private boolean terminatingPacketsEnabled = false;
+    private boolean terminatingPacketsEnabled;
 
     public SourceRconMessenger(boolean terminatingPacketsEnabled) {
         this(terminatingPacketsEnabled, null);
     }
 
     public SourceRconMessenger(boolean terminatingPacketsEnabled, ExecutorService executorService) {
-        super(new SourceRconSessionIdFactory(), ProcessingMode.SYNCHRONOUS);
+        super(new SourceRconSessionIdFactory(), ProcessingMode.SYNCHRONOUS, executorService);
         this.terminatingPacketsEnabled = terminatingPacketsEnabled;
     }
 
@@ -74,7 +73,7 @@ public class SourceRconMessenger extends GameServerMessenger<SourceRconRequest, 
     }
 
     @Override
-    public CompletableFuture<SourceRconResponse> send(SourceRconRequest request, RequestPriority priority) {
+    public CompletableFuture<SourceRconResponse> send(SourceRconRequest request) {
         final int requestId = request.getRequestId();
 
         SourceRconRequestType type = getRequestType(request);
@@ -86,7 +85,7 @@ public class SourceRconMessenger extends GameServerMessenger<SourceRconRequest, 
         //Add the request type to the map
         requestTypeMap.put(requestId, getRequestType(request));
 
-        final CompletableFuture<SourceRconResponse> futureResponse = super.send(request, priority);
+        final CompletableFuture<SourceRconResponse> futureResponse = super.send(request);
         //Make sure to remove the requestId once the response future is completed
         futureResponse.whenComplete((response, error) -> {
             log.debug("Removing request id '{}' from type map", requestId);

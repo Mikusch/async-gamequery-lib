@@ -24,7 +24,6 @@
 
 package com.ibasco.agql.core;
 
-import com.ibasco.agql.core.enums.RequestPriority;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +34,7 @@ abstract public class AbstractClient<R extends AbstractRequest,
         S extends AbstractResponse,
         M extends AbstractMessenger<R, S>>
         implements Client<R, S> {
+
     private M messenger;
 
     private static final Logger log = LoggerFactory.getLogger(AbstractClient.class);
@@ -45,17 +45,9 @@ abstract public class AbstractClient<R extends AbstractRequest,
 
     @Override
     public <V> CompletableFuture<V> sendRequest(R message) {
-        return sendRequest(message, AbstractMessenger.DEFAULT_REQUEST_PRIORITY);
-    }
-
-    protected <V> CompletableFuture<V> sendRequest(R message, RequestPriority priority) {
         log.debug("Client '{}' Sending request : {}", this.getClass().getSimpleName(), message);
         //Send the request then transform the result once a response is received
-        return messenger.send(message, priority).thenApply(this::convertToResultType);
-    }
-
-    protected <V> CompletableFuture<V> sendRequest(R message, RequestPriority priority, int retry) {
-        return messenger.send(message, priority).thenApply(this::convertToResultType);
+        return messenger.send(message).thenApply(this::convertToResultType);
     }
 
     @SuppressWarnings("unchecked")

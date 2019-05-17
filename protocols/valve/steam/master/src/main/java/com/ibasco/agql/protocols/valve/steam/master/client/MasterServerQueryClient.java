@@ -29,7 +29,6 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.ibasco.agql.core.client.AbstractGameServerClient;
-import com.ibasco.agql.core.enums.RequestPriority;
 import com.ibasco.agql.core.exceptions.AsyncGameLibUncheckedException;
 import com.ibasco.agql.core.functions.TriConsumer;
 import com.ibasco.agql.core.utils.ConcurrentUtils;
@@ -198,11 +197,11 @@ public class MasterServerQueryClient extends AbstractGameServerClient<MasterServ
                     //Send initial query to the master source
                     serverList = retryer.call(() -> {
                         log.debug("Trying to send request packet to master server");
-                        CompletableFuture<Vector<InetSocketAddress>> p = sendRequest(new MasterServerRequest(destination, region, filter, _startAddress.get()), RequestPriority.HIGH);
+                        CompletableFuture<Vector<InetSocketAddress>> p = sendRequest(new MasterServerRequest(destination, region, filter, _startAddress.get()));
                         return p.get(3, TimeUnit.SECONDS);
                     });
                 } else {
-                    final CompletableFuture<Vector<InetSocketAddress>> p = sendRequest(new MasterServerRequest(destination, region, filter, _startAddress.get()), RequestPriority.HIGH);
+                    final CompletableFuture<Vector<InetSocketAddress>> p = sendRequest(new MasterServerRequest(destination, region, filter, _startAddress.get()));
                     //Retrieve the first batch, timeout after 3 seconds
                     serverList = p.get(3, TimeUnit.SECONDS);
                 }

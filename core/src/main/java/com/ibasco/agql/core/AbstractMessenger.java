@@ -26,7 +26,6 @@ package com.ibasco.agql.core;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.ibasco.agql.core.enums.ProcessingMode;
-import com.ibasco.agql.core.enums.RequestPriority;
 import com.ibasco.agql.core.enums.RequestStatus;
 import com.ibasco.agql.core.exceptions.ResponseException;
 import com.ibasco.agql.core.session.*;
@@ -35,7 +34,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -46,15 +44,13 @@ import java.util.function.Consumer;
  * process them based on priority</p>
  *
  * @param <A>
- *         {@link AbstractRequest}
+ *         The type of {@link AbstractRequest}
  * @param <B>
- *         {@link AbstractResponse}
+ *         The type {@link AbstractResponse}
  */
 abstract public class AbstractMessenger<A extends AbstractRequest, B extends AbstractResponse> implements Messenger<A, B> {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractMessenger.class);
-
-    public static final RequestPriority DEFAULT_REQUEST_PRIORITY = RequestPriority.MEDIUM;
 
     private static final int DEFAULT_REQUEST_QUEUE_CAPACITY = 30;
 
@@ -143,7 +139,7 @@ abstract public class AbstractMessenger<A extends AbstractRequest, B extends Abs
     abstract public void configureMappings(Map<Class<? extends A>, Class<? extends B>> map);
 
     /**
-     * Send a request using the default priority
+     * Send the request to the transport
      *
      * @param request
      *         An instance of {@link AbstractRequest} to be sent
@@ -152,24 +148,10 @@ abstract public class AbstractMessenger<A extends AbstractRequest, B extends Abs
      */
     @Override
     public CompletableFuture<B> send(A request) {
-        return send(request, DEFAULT_REQUEST_PRIORITY);
-    }
-
-    /**
-     * Adds the request to the queue then it will be sent through the underlying transport.
-     *
-     * @param request
-     *         An instance of {@link AbstractRequest}
-     * @param priority
-     *         The {@link RequestPriority}
-     *
-     * @return A {@link CompletableFuture} containing a {@link AbstractResponse} from the server if available.
-     */
-    public CompletableFuture<B> send(A request, RequestPriority priority) {
         log.debug("Adding request '{}' to queue", request.getClass().getSimpleName());
         CompletableFuture<B> promise = new CompletableFuture<>();
         try {
-            requestQueue.put(new RequestDetails<>(request, promise, priority, this.transport));
+            requestQueue.put(new RequestDetails<>(request, promise, this.transport));
             start(); //start if not yet started
         } catch (InterruptedException e) {
             promise.completeExceptionally(e);
@@ -402,16 +384,5 @@ abstract public class AbstractMessenger<A extends AbstractRequest, B extends Abs
         }
         sessionManager.close();
         transport.close();
-    }
-
-    /**
-     * Comparator class to be used by our priority queue for the natural ordering of requests
-     */
-    private static class RequestComparator implements Comparator<RequestDetails> {
-
-        @Override
-        public int compare(RequestDetails o1, RequestDetails o2) {
-            return o2.getPriority().compareTo(o1.getPriority());
-        }
     }
 }

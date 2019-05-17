@@ -25,7 +25,6 @@
 package com.ibasco.agql.protocols.valve.source.query.client;
 
 import com.ibasco.agql.core.AbstractClient;
-import com.ibasco.agql.core.enums.RequestPriority;
 import com.ibasco.agql.core.utils.EncryptUtils;
 import com.ibasco.agql.protocols.valve.source.query.SourceRconAuthStatus;
 import com.ibasco.agql.protocols.valve.source.query.SourceRconMessenger;
@@ -126,7 +125,7 @@ public class SourceRconClient extends AbstractClient<SourceRconRequest, SourceRc
 
         int id = SourceRconUtil.createRequestId();
         log.debug("[AUTH]: Request with id: {}", id);
-        CompletableFuture<SourceRconAuthStatus> authRequestFuture = sendRequest(new SourceRconAuthRequest(address, id, password), RequestPriority.HIGH);
+        CompletableFuture<SourceRconAuthStatus> authRequestFuture = sendRequest(new SourceRconAuthRequest(address, id, password));
         authRequestFuture.whenComplete((status, error) -> {
             log.debug("[AUTH] Response : Status: {}, Error: {}", status, (error != null) ? error.getMessage() : "N/A");
             if (error != null) {

@@ -24,7 +24,6 @@
 
 package com.ibasco.agql.core;
 
-import com.ibasco.agql.core.enums.RequestPriority;
 import com.ibasco.agql.core.enums.RequestStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -39,22 +38,20 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Contains all the properties associated with this request
  */
-public class RequestDetails<R extends AbstractRequest, S extends AbstractResponse> implements Comparable<RequestDetails> {
+public class RequestDetails<R extends AbstractRequest, S extends AbstractResponse> {
     private static final Logger log = LoggerFactory.getLogger(RequestDetails.class);
     private R request;
     private CompletableFuture<S> clientPromise;
     private RequestStatus status;
-    private RequestPriority priority;
     private Transport<R> transport;
     private Class<S> expectedResponseClass;
     private AtomicInteger retries = new AtomicInteger(0);
     private long timeCreated;
 
-    public RequestDetails(R request, CompletableFuture<S> clientPromise, RequestPriority priority, Transport<R> transport) {
+    public RequestDetails(R request, CompletableFuture<S> clientPromise, Transport<R> transport) {
         this.status = RequestStatus.NEW;
         this.request = request;
         this.clientPromise = clientPromise;
-        this.priority = priority;
         this.transport = transport;
         this.timeCreated = System.currentTimeMillis();
     }
@@ -68,7 +65,6 @@ public class RequestDetails<R extends AbstractRequest, S extends AbstractRespons
         this.request = requestDetails.getRequest();
         this.clientPromise = requestDetails.getClientPromise();
         this.status = requestDetails.getStatus();
-        this.priority = requestDetails.getPriority();
         this.retries = new AtomicInteger(requestDetails.getRetries());
         this.expectedResponseClass = requestDetails.getExpectedResponseClass();
     }
@@ -87,14 +83,6 @@ public class RequestDetails<R extends AbstractRequest, S extends AbstractRespons
 
     public synchronized void setClientPromise(CompletableFuture<S> clientPromise) {
         this.clientPromise = clientPromise;
-    }
-
-    public synchronized RequestPriority getPriority() {
-        return priority;
-    }
-
-    public synchronized void setPriority(RequestPriority priority) {
-        this.priority = priority;
     }
 
     public int getRetries() {
@@ -161,16 +149,10 @@ public class RequestDetails<R extends AbstractRequest, S extends AbstractRespons
     }
 
     @Override
-    public int compareTo(RequestDetails o) {
-        return this.priority.compareTo(o.getPriority());
-    }
-
-    @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE)
                 .append("Request", this.getRequest().getClass().getSimpleName())
                 .append("Created", this.getTimeCreated())
-                .append("Priority", this.getPriority())
                 .append("Status", this.getStatus())
                 .toString();
     }

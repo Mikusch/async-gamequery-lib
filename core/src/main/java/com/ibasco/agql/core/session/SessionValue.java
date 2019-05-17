@@ -139,7 +139,6 @@ public class SessionValue<Req extends AbstractRequest, Res extends AbstractRespo
                 .append("Id", this.getId())
                 .append("Index", this.getIndex())
                 .append("Request", this.getRequestDetails().getRequest().getClass().getSimpleName())
-                .append("Priority", this.getRequestDetails().getPriority())
                 .append("Created", this.getTimeRegistered())
                 .toString();
     }

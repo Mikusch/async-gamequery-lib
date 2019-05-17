@@ -33,7 +33,6 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.ibasco.agql.core.client.AbstractGameServerClient;
 import com.ibasco.agql.core.enums.ProcessingMode;
-import com.ibasco.agql.core.enums.RequestPriority;
 import com.ibasco.agql.core.exceptions.CacheTimeoutException;
 import com.ibasco.agql.protocols.valve.source.query.SourceQueryMessenger;
 import com.ibasco.agql.protocols.valve.source.query.SourceServerRequest;
@@ -65,13 +64,19 @@ import java.util.concurrent.*;
 public class SourceQueryClient extends AbstractGameServerClient<SourceServerRequest, SourceServerResponse, SourceQueryMessenger> {
 
     private static final Logger log = LoggerFactory.getLogger(SourceQueryClient.class);
+
     private static final int MAX_CHALLENGE_CACHE_SIZE = 32000;
+
     private final ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("cache-pool-%d").setDaemon(true).build();
 
     private final ListeningExecutorService executorService = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() + 1, threadFactory));
+
     private LoadingCache<InetSocketAddress, Integer> challengeCache;
+
     private int maxCacheSize = MAX_CHALLENGE_CACHE_SIZE;
+
     private Duration cacheExpiration = Duration.ofMinutes(15);
+
     private Duration cacheRefreshInterval = Duration.ofMinutes(10);
 
     /**
@@ -103,7 +108,7 @@ public class SourceQueryClient extends AbstractGameServerClient<SourceServerRequ
      * @return A {@link CompletableFuture} returning a value of {@link Integer} representing the server challenge number
      */
     public CompletableFuture<Integer> getServerChallenge(SourceChallengeType type, InetSocketAddress address) {
-        return sendRequest(new SourceChallengeRequest(type, address), RequestPriority.HIGH);
+        return sendRequest(new SourceChallengeRequest(type, address));
     }
 
     /**
