@@ -114,7 +114,7 @@ abstract public class NettyPooledTransport<M extends AbstractRequest, K> extends
     }
 
     /**
-     * <p>A method to perform cleanup operations on a {@link Channel}. This is called after every invocation of {@link
+     * <p>Perform cleanup operations on a {@link Channel}. This is called after every invocation of {@link
      * #send(AbstractRequest)}.</p>
      *
      * @param c
