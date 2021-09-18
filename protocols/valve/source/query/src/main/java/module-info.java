@@ -1,6 +1,6 @@
 module agql.source.query {
-    exports com.ibasco.agql.protocols.valve.source.query.logger;
     exports com.ibasco.agql.protocols.valve.source.query;
+    exports com.ibasco.agql.protocols.valve.source.query.logger;
     exports com.ibasco.agql.protocols.valve.source.query.client;
     exports com.ibasco.agql.protocols.valve.source.query.exceptions;
     exports com.ibasco.agql.protocols.valve.source.query.enums;

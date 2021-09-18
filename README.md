@@ -5,8 +5,8 @@ Asynchronous Game Query Library
 [mavenLink]: https://search.maven.org/search?q=com.ibasco.agql
 
 [![Maven][mavenImg]][mavenLink] [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=29TX29ZSNXM64) [![Build Status](https://travis-ci.org/ribasco/async-gamequery-lib.svg?branch=master)](https://travis-ci.org/ribasco/async-gamequery-lib) [![Javadocs](https://www.javadoc.io/badge/com.ibasco.agql/async-gamequery-lib.svg)](https://www.javadoc.io/doc/com.ibasco.agql/async-gamequery-lib) [![Gitter](https://badges.gitter.im/gitterHQ/gitter.svg)](https://gitter.im/async-gamequery-lib/lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2f5f445a366a4692ab8aa49b0cf4f477)](https://www.codacy.com/app/raffy/async-gamequery-lib?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ribasco/async-gamequery-lib&amp;utm_campaign=Badge_Grade) [![Project Stats](https://www.openhub.net/p/async-gamequery-lib/widgets/project_thin_badge?format=gif&ref=sample)](https://www.openhub.net/p/async-gamequery-lib)
- 
-A high-performance java game query library designed for steam/source based games. It's built on top of [Netty](https://github.com/netty/netty) as it's core transport engine and use [AsyncHttpClient](https://github.com/AsyncHttpClient/async-http-client) for web services.
+
+An asynchronous game query library designed for steam/source based games. It's built on top of [Netty](https://github.com/netty/netty) as it's core transport engine and use [AsyncHttpClient](https://github.com/AsyncHttpClient/async-http-client) for web services.
 
 Project Resources
 -------------
@@ -21,8 +21,12 @@ Releases
 
 1.0.0
 
+* First major release
+* Updated implementation of Source Server Query (Issue #50)
+* Changed license to Apache 2.0
+* Clash of Clans Web API module has been removed
 * Moved MasterServerFilter to core package and renamed to ServerFilter
-* Added new webapi implementation for interface IGameServersService
+* Added new Web-API implementation for interface IGameServersService
 * All primitive types have been replaced by reference types in pojos
 * Fixed consistency of id property types
 
@@ -46,7 +50,6 @@ Below is the list of what is currently implemented on the library
 * Valve Dota 2 Web API
 * Valve CS:GO Web API 
 * Valve Source Log Handler (a log monitor service)
-* Supercell Clash of Clans Web API
 
 Requirements
 ------------
@@ -117,16 +120,6 @@ Just add the following dependencies to your maven pom.xml. Only include the modu
 </dependency>
 ```
 
-**Supercell Clash of Clans Web API**
-
-```xml
-<dependency>
-    <groupId>com.ibasco.agql</groupId>
-    <artifactId>agql-coc-webapi</artifactId>
-    <version>1.0.0</version>
-</dependency>
-```
-
 ### Install from Source
 
 Clone from remote repository then `mvn install`. All of the modules will be installed to your local maven repository.
@@ -150,7 +143,7 @@ To run the available examples, I have included a convenience script (`run-exampl
 The script accepts a "key" that represents an example application. To get a list of keys, simply invoke the script without arguments, for example: 
 
 ~~~bash
-raffy@spinmetal:~/projects/async-gamequery-lib$ ./run-example.sh
+$ ./run-example.sh
 Error: Missing Example Key. Please specify the example key. (e.g. source-query)
 
 ====================================================================
@@ -159,7 +152,6 @@ List of available examples
 - Source Server Query Example      (key: source-query)
 - Master Server Query Example      (key: master-query)
 - Source Rcon Example              (key: source-rcon)
-- Clash of Clans Web API Example   (key: coc-webapi)
 - CS:GO Web API Example            (key: csgo-webapi)
 - Steam Web API Example            (key: steam-webapi)
 - Steam Storefront Web API Example (key: steam-store-webapi)
@@ -171,7 +163,7 @@ List of available examples
 If you are running a web service type example, you  will be prompted with an API key. Simply copy and paste the key to the console.
 
 ~~~
-raffy@spinmetal:~/projects/async-gamequery-lib$ ./run-example.sh coc-webapi
+$ ./run-example.sh coc-webapi
 Running example for coc-webapi
 [INFO] Scanning for projects...
 [INFO]

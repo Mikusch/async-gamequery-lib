@@ -1,25 +1,17 @@
 /*
- * MIT License
+ * Copyright 2021 Rafael Luis L. Ibasco
  *
- * Copyright (c) 2019 Asynchronous Game Query Library
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.ibasco.agql.core;
@@ -37,14 +29,18 @@ import java.util.function.Consumer;
  * A container class for handling split-packets
  */
 public class SplitPacketContainer implements Iterable<Map.Entry<Integer, byte[]>> {
+
     private static final Logger log = LoggerFactory.getLogger(SplitPacketContainer.class);
-    private TreeMap<Integer, byte[]> container = new TreeMap<>();
-    private int maxSplitPackets;
+
+    private final TreeMap<Integer, byte[]> container = new TreeMap<>();
+
+    private final int maxSplitPackets;
 
     /**
      * Primary Constructor
      *
-     * @param maxSplitPackets The number of split packets we expect to receive
+     * @param maxSplitPackets
+     *         The number of split packets we expect to receive
      */
     public SplitPacketContainer(int maxSplitPackets) {
         this.maxSplitPackets = maxSplitPackets;
@@ -53,10 +49,13 @@ public class SplitPacketContainer implements Iterable<Map.Entry<Integer, byte[]>
     /**
      * <p>Adds a split packet to the container</p>
      *
-     * @param packetNumber The packet number
-     * @param packet       A byte array representing a single split-packet unit
+     * @param packetNumber
+     *         The packet number
+     * @param packet
+     *         A byte array representing a single split-packet unit
      *
-     * @throws PacketSizeLimitException thrown if the max number of allowed packets has been reached. This is usually specified by the protocol.
+     * @throws PacketSizeLimitException
+     *         thrown if the max number of allowed packets has been reached. This is usually specified by the protocol.
      */
     public void addPacket(int packetNumber, byte[] packet) {
         if (this.container.size() >= maxSplitPackets)
@@ -65,7 +64,8 @@ public class SplitPacketContainer implements Iterable<Map.Entry<Integer, byte[]>
     }
 
     /**
-     * @param packetNumber The packet number to be removed
+     * @param packetNumber
+     *         The packet number to be removed
      */
     public void removePacket(int packetNumber) {
         this.container.remove(packetNumber);
@@ -74,10 +74,11 @@ public class SplitPacketContainer implements Iterable<Map.Entry<Integer, byte[]>
     /**
      * <p>Iterate each packet entry</p>
      *
-     * @param action A {@link Consumer} callback
+     * @param action
+     *         A {@link Consumer} callback
      */
     public void forEachEntry(Consumer<? super Map.Entry<Integer, byte[]>> action) {
-        container.entrySet().stream().forEachOrdered(action);
+        container.entrySet().forEach(action);
     }
 
     /**
@@ -95,10 +96,10 @@ public class SplitPacketContainer implements Iterable<Map.Entry<Integer, byte[]>
      * @return The total number of packets within this container
      */
     public int getPacketSize() {
-        return container.entrySet()
-                .stream()
-                .mapToInt(packetEntry -> packetEntry.getValue().length)
-                .sum();
+        return container.values()
+                        .stream()
+                        .mapToInt(bytes -> bytes.length)
+                        .sum();
     }
 
     @Override

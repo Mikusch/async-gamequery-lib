@@ -20,7 +20,7 @@ If you don't mind waiting for list to complete, you don't have to pass a callbac
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 try (MasterServerQueryClient client = new MasterServerQueryClient()) {
-    MasterServerFilter filter = MasterServerFilter.create().dedicated(true);
+    ServerFilter filter = ServerFilter.create().dedicated(true);
     Vector<InetSocketAddress> addressList = masterServerQueryClient.getServerList(MasterServerType.SOURCE, MasterServerRegion.REGION_ALL, filter).join();
     addressList.forEach(this::displayIp);
 }
