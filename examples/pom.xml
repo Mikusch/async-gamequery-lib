@@ -83,7 +83,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.0</version>
+            <version>1.2.3</version>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
@@ -96,10 +96,6 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>agql-dota2-webapi</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>agql-coc-webapi</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

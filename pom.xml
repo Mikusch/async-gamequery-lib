@@ -96,7 +96,6 @@
     <modules>
         <module>core</module>
         <module>examples</module>
-        <module>protocols/supercell/clashofclans/webapi</module>
         <module>protocols/valve/csgo/webapi</module>
         <module>protocols/valve/dota2/webapi</module>
         <module>protocols/valve/source/query</module>
@@ -602,11 +601,6 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>agql-dota2-webapi</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>agql-coc-webapi</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
