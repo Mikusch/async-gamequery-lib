@@ -6,4 +6,5 @@ module agql.csgo.webapi {
     requires async.http.client;
     requires com.google.gson;
     requires agql.lib.core;
+    requires org.slf4j;
 }
