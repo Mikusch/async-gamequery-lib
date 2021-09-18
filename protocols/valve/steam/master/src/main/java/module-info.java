@@ -6,7 +6,7 @@ module agql.steam.master {
     requires org.apache.commons.lang3;
     requires agql.lib.core;
     requires io.netty.buffer;
-    requires slf4j.api;
+    requires org.slf4j;
     requires io.netty.transport;
     requires io.netty.codec;
     requires guava.retrying;

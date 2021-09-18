@@ -15,13 +15,13 @@ module agql.lib.core {
 
     requires io.netty.buffer;
     requires org.apache.commons.lang3;
-    requires slf4j.api;
+    requires org.slf4j;
     requires io.netty.common;
     requires io.netty.transport;
     requires io.netty.transport.epoll;
     requires async.http.client;
     requires io.netty.codec.http;
-    requires gson;
+    requires com.google.gson;
     requires org.apache.commons.codec;
     requires java.sql;
     requires com.google.common;

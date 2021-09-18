@@ -1,6 +1,6 @@
 module agql.lib.examples {
     requires agql.lib.core;
-    requires slf4j.api;
+    requires org.slf4j;
     requires agql.source.query;
     requires agql.csgo.webapi;
     requires org.apache.commons.lang3;

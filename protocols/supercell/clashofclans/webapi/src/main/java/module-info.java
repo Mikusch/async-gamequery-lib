@@ -3,11 +3,10 @@ module agql.coc.webapi {
     exports com.ibasco.agql.protocols.supercell.coc.webapi.enums;
     exports com.ibasco.agql.protocols.supercell.coc.webapi.interfaces;
     exports com.ibasco.agql.protocols.supercell.coc.webapi.pojos;
-    requires gson;
-    requires agql.lib.core;
+    requires com.google.gson;
     requires io.netty.codec.http;
-    requires slf4j.api;
-    requires org.apache.commons.lang3;
+    requires org.slf4j;
     requires async.http.client;
+    requires agql.lib.core;
     opens com.ibasco.agql.protocols.supercell.coc.webapi.pojos;
 }

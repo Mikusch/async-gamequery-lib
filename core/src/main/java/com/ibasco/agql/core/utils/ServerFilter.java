@@ -51,7 +51,7 @@ public final class ServerFilter {
 
     private static final String[] specialFilters = new String[] {"nand", "nor", "napp"};
 
-    private Map<FilterKey, Object> filterMap = new LinkedHashMap<>();
+    private final Map<FilterKey, Object> filterMap = new LinkedHashMap<>();
 
     protected static class FilterKey {
 
