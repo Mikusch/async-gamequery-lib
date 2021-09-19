@@ -42,7 +42,7 @@
     <url>https://ribasco.github.io/async-gamequery-lib</url>
     <packaging>pom</packaging>
     <description>
-        A high-performance java game query library designed for steam/source based games. Provides developers an easy way to perform asynchronous operations on steam/source based services.
+        A java game query library for steam/source based games. Provides developers an easy way to perform asynchronous operations on steam/source based services.
     </description>
 
     <scm>
